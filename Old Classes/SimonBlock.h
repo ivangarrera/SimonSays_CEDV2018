@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine.h"
 #include "GameFramework/Actor.h"
 #include "SimonBlock.generated.h"
 
@@ -27,38 +26,33 @@ public:
 	/** Are we currently active? */
 	bool bIsActive;
 
-	/** String to know in an efficient way which is my color*/
-	FString Color;
+	/** Pointer to white material used on the focused block */
+	UPROPERTY()
+	class UMaterial* BaseMaterial;
 
-	/** Pointer to the actual material */
+	/** Pointer to blue material used on inactive blocks */
 	UPROPERTY()
-		class UMaterial* GreenMaterial;
-	UPROPERTY()
-		class UMaterial* RedMaterial;
-	UPROPERTY()
-		class UMaterial* BlueMaterial;
-	UPROPERTY()
-		class UMaterial* YellowMaterial;
+	class UMaterialInstance* BlueMaterial;
 
-	/** Audio variables: SoundCue and AudioComponent*/
+	/** Pointer to orange material used on active blocks */
 	UPROPERTY()
-		class USoundBase* ActivatedSoundGreen;
+	class UMaterialInstance* OrangeMaterial;
+
+	/** Grid that owns us */
 	UPROPERTY()
-		class USoundBase* ActivatedSoundRed;
-	UPROPERTY()
-		class USoundBase* ActivatedSoundBlue;
-	UPROPERTY()
-		class USoundBase* ActivatedSoundYellow;
+	class ASimonBlockGrid* OwningGrid;
 
-	UPROPERTY()
-		class UAudioComponent* ActivatedAudioComponent;
+	/** Handle the block being clicked */
+	UFUNCTION()
+	void BlockClicked(UPrimitiveComponent* ClickedComp, FKey ButtonClicked);
 
+	/** Handle the block being touched  */
+	UFUNCTION()
+	void OnFingerPressedBlock(ETouchIndex::Type FingerIndex, UPrimitiveComponent* TouchedComponent);
 
+	void HandleClicked();
 
-	void Activate() const;
-
-	void SetMaterial(FString Color);
-
+	void Highlight(bool bOn);
 
 public:
 	/** Returns DummyRoot subobject **/

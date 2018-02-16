@@ -3,3 +3,9 @@
 .Intermediate/*
 
 .Saved/*
+
+.Plugins/Binaries/*
+
+Plugins/Intermediate/*
+
+*.sln

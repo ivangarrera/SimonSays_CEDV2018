@@ -1,32 +1,45 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 #include "SimonBlock.h"
-#include "SimonBlockGrid.h"
+#include "Components/AudioComponent.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/StaticMesh.h"
 #include "Materials/MaterialInstance.h"
 
-ASimonBlock::ASimonBlock()
+ASimonBlock::ASimonBlock() : bIsActive(false)
 {
+
 	// Structure to hold one-time initialization
+
 	struct FConstructorStatics
 	{
 		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> PlaneMesh;
-		ConstructorHelpers::FObjectFinderOptional<UMaterial> BaseMaterial;
-		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> BlueMaterial;
-		ConstructorHelpers::FObjectFinderOptional<UMaterialInstance> OrangeMaterial;
+		ConstructorHelpers::FObjectFinderOptional<UMaterial> GreenMaterial;
+		ConstructorHelpers::FObjectFinderOptional<UMaterial> RedMaterial;
+		ConstructorHelpers::FObjectFinderOptional<UMaterial> BlueMaterial;
+		ConstructorHelpers::FObjectFinderOptional<UMaterial> YellowMaterial;
+		ConstructorHelpers::FObjectFinderOptional<USoundCue> GreenSound;
+		ConstructorHelpers::FObjectFinderOptional<USoundCue> RedSound;
+		ConstructorHelpers::FObjectFinderOptional<USoundCue> BlueSound;
+		ConstructorHelpers::FObjectFinderOptional<USoundCue> YellowSound;
+
 		FConstructorStatics()
-			: PlaneMesh(TEXT("/Game/Puzzle/Meshes/PuzzleCube.PuzzleCube"))
-			, BaseMaterial(TEXT("/Game/Puzzle/Meshes/BaseMaterial.BaseMaterial"))
-			, BlueMaterial(TEXT("/Game/Puzzle/Meshes/BlueMaterial.BlueMaterial"))
-			, OrangeMaterial(TEXT("/Game/Puzzle/Meshes/OrangeMaterial.OrangeMaterial"))
+			: PlaneMesh(TEXT("/Game/Models/Mesh/SimonBlock/SimonBlock.SimonBlock"))
+			, GreenMaterial(TEXT("/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialGreen.SimonBlock_MaterialGreen"))
+			, RedMaterial(TEXT("/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialRed.SimonBlock_MaterialRed"))
+			, BlueMaterial(TEXT("/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialBlue.SimonBlock_MaterialBlue"))
+			, YellowMaterial(TEXT("/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialYellow.SimonBlock_MaterialYellow"))
+			, GreenSound(TEXT("/Game/Audio/GreenSound.GreenSoundCue"))
+			, RedSound(TEXT("/Game/Audio/GreenSound.GreenSoundCue"))
+			, BlueSound(TEXT("/Game/Audio/GreenSound.GreenSoundCue"))
+			, YellowSound(TEXT("/Game/Audio/GreenSound.GreenSoundCue"))
 		{
 		}
 	};
 	static FConstructorStatics ConstructorStatics;
 
-	// Create dummy root scene component
+	// Create dummy root scene component	
 	DummyRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Dummy0"));
 	RootComponent = DummyRoot;
 
@@ -35,60 +48,53 @@ ASimonBlock::ASimonBlock()
 	BlockMesh->SetStaticMesh(ConstructorStatics.PlaneMesh.Get());
 	BlockMesh->SetRelativeScale3D(FVector(1.f,1.f,0.25f));
 	BlockMesh->SetRelativeLocation(FVector(0.f,0.f,25.f));
-	BlockMesh->SetMaterial(0, ConstructorStatics.BlueMaterial.Get());
 	BlockMesh->SetupAttachment(DummyRoot);
-	BlockMesh->OnClicked.AddDynamic(this, &ASimonBlock::BlockClicked);
-	BlockMesh->OnInputTouchBegin.AddDynamic(this, &ASimonBlock::OnFingerPressedBlock);
 
-	// Save a pointer to the orange material
-	BaseMaterial = ConstructorStatics.BaseMaterial.Get();
+	GreenMaterial = ConstructorStatics.GreenMaterial.Get();
+	RedMaterial = ConstructorStatics.RedMaterial.Get();
 	BlueMaterial = ConstructorStatics.BlueMaterial.Get();
-	OrangeMaterial = ConstructorStatics.OrangeMaterial.Get();
+	YellowMaterial = ConstructorStatics.YellowMaterial.Get();
+
+	ActivatedSoundGreen = ConstructorStatics.GreenSound.Get();
+	ActivatedSoundRed = ConstructorStatics.RedSound.Get();
+	ActivatedSoundBlue = ConstructorStatics.BlueSound.Get();
+	ActivatedSoundYellow = ConstructorStatics.YellowSound.Get();
+
+	ActivatedAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("ActivatedAudioComponent"));
+	
 }
 
-void ASimonBlock::BlockClicked(UPrimitiveComponent* ClickedComp, FKey ButtonClicked)
+void ASimonBlock::SetMaterial(FString Color)
 {
-	HandleClicked();
-}
 
-
-void ASimonBlock::OnFingerPressedBlock(ETouchIndex::Type FingerIndex, UPrimitiveComponent* TouchedComponent)
-{
-	HandleClicked();
-}
-
-void ASimonBlock::HandleClicked()
-{
-	// Check we are not already active
-	if (!bIsActive)
+	if (Color.Equals("Green"))
 	{
-		bIsActive = true;
-
-		// Change material
-		BlockMesh->SetMaterial(0, OrangeMaterial);
-
-		// Tell the Grid
-		if (OwningGrid != nullptr)
-		{
-			OwningGrid->AddScore();
-		}
+		// The material to set is Green
+		BlockMesh->SetMaterial(0, GreenMaterial);
+		ActivatedAudioComponent->SetSound(ActivatedSoundGreen);
 	}
-}
-
-void ASimonBlock::Highlight(bool bOn)
-{
-	// Do not highlight if the block has already been activated.
-	if (bIsActive)
+	else if (Color.Equals("Red"))
 	{
-		return;
+		// The material to set is Red
+		BlockMesh->SetMaterial(0, RedMaterial);
+		ActivatedAudioComponent->SetSound(ActivatedSoundRed);
 	}
-
-	if (bOn)
+	else if (Color.Equals("Blue"))
 	{
-		BlockMesh->SetMaterial(0, BaseMaterial);
-	}
-	else
-	{
+		// The material to set is Blue
 		BlockMesh->SetMaterial(0, BlueMaterial);
+		ActivatedAudioComponent->SetSound(ActivatedSoundBlue);
+	}
+	else if (Color.Equals("Yellow"))
+	{
+		// The material to set is Yellow
+		BlockMesh->SetMaterial(0, YellowMaterial);
+		ActivatedAudioComponent->SetSound(ActivatedSoundYellow);
 	}
 }
+
+void ASimonBlock::Activate() const
+{
+	ActivatedAudioComponent->Play();
+}
+
