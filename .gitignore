@@ -4,8 +4,8 @@
 
 .Saved/*
 
-.Plugins/Binaries/*
+.Plugins/CWButton/Binaries/*
 
-Plugins/Intermediate/*
+Plugins/CWButton/Intermediate/*
 
 *.sln
