@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SimonBlock.h"
+#include "EngineMinimal.h"
 #include "GameFramework/Actor.h"
 #include "SimonManager.generated.h"
 
@@ -27,5 +29,22 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	
-	
+private:
+	//Array to keep the reference of the 4 blocks
+	TArray<ASimonBlock*> Blocks;
+
+	//Arrays to control the sequence: Total Sequence and Sequence in construction.
+	TArray<ASimonBlock*> Sequence;
+
+	//Counter to know the state of the sequence when showing it
+	int Counter;
+
+	float AccumulatedDeltaTime;
+
+	//Timer to show the sequence every number of seconds (Should change with difficulty or time)
+	float ShowAnother;
+
+
+	ASimonBlock* GetRandomBlock() const;
+
 };

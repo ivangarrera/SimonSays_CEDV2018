@@ -1,13 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "SimonManager.h"
-#include "SimonBlock.h"
 #include "Components/TextRenderComponent.h"
 #include "Engine/World.h"
 
 
 // Sets default values
-ASimonManager::ASimonManager()
+ASimonManager::ASimonManager() : AccumulatedDeltaTime(0.0f), ShowAnother(1.f), Counter(0)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -39,6 +38,8 @@ void ASimonManager::BeginPlay()
 			NewBlock->SetMaterial(color);
 		}
 
+		Blocks.Add(NewBlock);
+
 		Rotation.Yaw += 90;
 	}
 	
@@ -49,5 +50,26 @@ void ASimonManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	AccumulatedDeltaTime += DeltaTime;
+
+	//If the there are still blocks in the sequence
+	if (AccumulatedDeltaTime > ShowAnother && Counter < Sequence.Num())
+	{
+		Sequence[Counter]->Activate();
+		Counter++;
+
+		AccumulatedDeltaTime = 0.f;
+	}
+	//If the sequence has finished, add another block
+	if (Counter == Sequence.Num())
+	{
+		Sequence.Add(GetRandomBlock());
+		Counter = 0;
+	}
+
 }
 
+ASimonBlock* ASimonManager::GetRandomBlock() const
+{
+	return Blocks[FMath::RandRange(0, Blocks.Num() - 1)];
+}
