@@ -1,8 +1,0 @@
-# Visual Studio solution #
-*.sln
-
-# Folders that are not needed #
-.vs
-Binaries
-Intermediate
-Saved
