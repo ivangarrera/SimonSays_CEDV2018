@@ -14,51 +14,52 @@ ASimonBlock::ASimonBlock() : bIsActive(false)
 
 	struct FConstructorStatics
 	{
-		ConstructorHelpers::FObjectFinderOptional<UStaticMesh> PlaneMesh;
 		ConstructorHelpers::FObjectFinderOptional<UMaterial> GreenMaterial;
 		ConstructorHelpers::FObjectFinderOptional<UMaterial> RedMaterial;
 		ConstructorHelpers::FObjectFinderOptional<UMaterial> BlueMaterial;
 		ConstructorHelpers::FObjectFinderOptional<UMaterial> YellowMaterial;
-		ConstructorHelpers::FObjectFinderOptional<USoundCue> GreenSound;
-		ConstructorHelpers::FObjectFinderOptional<USoundCue> RedSound;
-		ConstructorHelpers::FObjectFinderOptional<USoundCue> BlueSound;
-		ConstructorHelpers::FObjectFinderOptional<USoundCue> YellowSound;
 
 		FConstructorStatics()
-			: PlaneMesh(TEXT("/Game/Models/Mesh/SimonBlock/SimonBlock.SimonBlock"))
-			, GreenMaterial(TEXT("/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialGreen.SimonBlock_MaterialGreen"))
+			: GreenMaterial(TEXT("/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialGreen.SimonBlock_MaterialGreen"))
 			, RedMaterial(TEXT("/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialRed.SimonBlock_MaterialRed"))
 			, BlueMaterial(TEXT("/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialBlue.SimonBlock_MaterialBlue"))
 			, YellowMaterial(TEXT("/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialYellow.SimonBlock_MaterialYellow"))
-			, GreenSound(TEXT("/Game/Audio/GreenSound.GreenSoundCue"))
-			, RedSound(TEXT("/Game/Audio/GreenSound.GreenSoundCue"))
-			, BlueSound(TEXT("/Game/Audio/GreenSound.GreenSoundCue"))
-			, YellowSound(TEXT("/Game/Audio/GreenSound.GreenSoundCue"))
 		{
 		}
 	};
 	static FConstructorStatics ConstructorStatics;
+
+	auto SkeletalMesh = ConstructorHelpers::FObjectFinder<USkeletalMesh> (TEXT("SkeletalMesh'/Game/Models/Mesh/SimonBlock/SimonBlock.SimonBlock'"));
+
+	auto GMaterial = ConstructorHelpers::FObjectFinder<UMaterial> (TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialGreen.SimonBlock_MaterialGreen'"));
+	auto RMaterial = ConstructorHelpers::FObjectFinder<UMaterial> (TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialRed.SimonBlock_MaterialRed'"));
+	auto BMaterial = ConstructorHelpers::FObjectFinder<UMaterial> (TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialBlue.SimonBlock_MaterialBlue'"));
+	auto YMaterial = ConstructorHelpers::FObjectFinder<UMaterial> (TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialYellow.SimonBlock_MaterialYellow'"));
+
+	auto GSound = ConstructorHelpers::FObjectFinder<USoundCue> (TEXT("'/Game/Audio/GreenSoundCue.GreenSoundCue'"));
+	auto RSound = ConstructorHelpers::FObjectFinder<USoundCue> (TEXT("'/Game/Audio/RedSoundCue.RedSoundCue'"));
+	auto BSound = ConstructorHelpers::FObjectFinder<USoundCue> (TEXT("'/Game/Audio/BlueSoundCue.BlueSoundCue'"));
+	auto YSound = ConstructorHelpers::FObjectFinder<USoundCue> (TEXT("'/Game/Audio/YellowSoundCue.YellowSoundCue'"));
 
 	// Create dummy root scene component	
 	DummyRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Dummy0"));
 	RootComponent = DummyRoot;
 
 	// Create static mesh component
-	BlockMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BlockMesh0"));
-	BlockMesh->SetStaticMesh(ConstructorStatics.PlaneMesh.Get());
-	BlockMesh->SetRelativeScale3D(FVector(1.f,1.f,0.25f));
-	BlockMesh->SetRelativeLocation(FVector(0.f,0.f,25.f));
+	BlockMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("BlockMesh"));
+	BlockMesh->SetSkeletalMesh(SkeletalMesh.Object);
+	BlockMesh->SetRelativeLocation(FVector(0.0f, 0.0f, 20.0f));
 	BlockMesh->SetupAttachment(DummyRoot);
 
-	GreenMaterial = ConstructorStatics.GreenMaterial.Get();
-	RedMaterial = ConstructorStatics.RedMaterial.Get();
-	BlueMaterial = ConstructorStatics.BlueMaterial.Get();
-	YellowMaterial = ConstructorStatics.YellowMaterial.Get();
+	GreenMaterial = GMaterial.Object;
+	RedMaterial = RMaterial.Object;
+	BlueMaterial = BMaterial.Object;
+	YellowMaterial = YMaterial.Object;
 
-	ActivatedSoundGreen = ConstructorStatics.GreenSound.Get();
-	ActivatedSoundRed = ConstructorStatics.RedSound.Get();
-	ActivatedSoundBlue = ConstructorStatics.BlueSound.Get();
-	ActivatedSoundYellow = ConstructorStatics.YellowSound.Get();
+	ActivatedSoundGreen = GSound.Object;
+	ActivatedSoundRed = RSound.Object;
+	ActivatedSoundBlue = BSound.Object;
+	ActivatedSoundYellow = YSound.Object;
 
 	ActivatedAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("ActivatedAudioComponent"));
 	
@@ -67,25 +68,25 @@ ASimonBlock::ASimonBlock() : bIsActive(false)
 void ASimonBlock::SetMaterial(FString Color)
 {
 
-	if (Color.Equals("Green"))
+	if (Color.Equals("GREEN"))
 	{
 		// The material to set is Green
 		BlockMesh->SetMaterial(0, GreenMaterial);
 		ActivatedAudioComponent->SetSound(ActivatedSoundGreen);
 	}
-	else if (Color.Equals("Red"))
+	else if (Color.Equals("RED"))
 	{
 		// The material to set is Red
 		BlockMesh->SetMaterial(0, RedMaterial);
 		ActivatedAudioComponent->SetSound(ActivatedSoundRed);
 	}
-	else if (Color.Equals("Blue"))
+	else if (Color.Equals("BLUE"))
 	{
 		// The material to set is Blue
 		BlockMesh->SetMaterial(0, BlueMaterial);
 		ActivatedAudioComponent->SetSound(ActivatedSoundBlue);
 	}
-	else if (Color.Equals("Yellow"))
+	else if (Color.Equals("YELLOW"))
 	{
 		// The material to set is Yellow
 		BlockMesh->SetMaterial(0, YellowMaterial);

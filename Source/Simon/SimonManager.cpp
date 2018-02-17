@@ -9,9 +9,8 @@
 // Sets default values
 ASimonManager::ASimonManager()
 {
-	Super::BeginPlay();
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	colors.Add(TEXT("RED"));
 	colors.Add(TEXT("GREEN"));
@@ -25,14 +24,22 @@ void ASimonManager::BeginPlay()
 {
 	Super::BeginPlay();
 
+	FVector Location(0.0f, 0.0f, 20.0f);
+	FRotator Rotation(0.0f, 0.0f, 0.0f);
+	FVector Scale(175.f, 175.f, 1.f);
+
 	for (auto color : colors)
 	{
-		ASimonBlock* NewBlock = GetWorld()->SpawnActor<ASimonBlock>();
+
+		FTransform transform(Rotation, Location, Scale);
+		ASimonBlock* NewBlock = GetWorld()->SpawnActor<ASimonBlock>(ASimonBlock::StaticClass(), transform);
 
 		if (NewBlock != nullptr)
 		{
 			NewBlock->SetMaterial(color);
 		}
+
+		Rotation.Yaw += 90;
 	}
 	
 }

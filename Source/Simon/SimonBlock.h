@@ -17,9 +17,9 @@ class ASimonBlock : public AActor
 	UPROPERTY(Category = Block, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class USceneComponent* DummyRoot;
 
-	/** StaticMesh component for the clickable block */
-	UPROPERTY(Category = Block, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* BlockMesh;
+	/** SkeletalMesh component for the clickable block */
+	UPROPERTY()
+		TWeakObjectPtr<USkeletalMeshComponent> BlockMesh;
 
 public:
 	ASimonBlock();
@@ -58,13 +58,6 @@ public:
 	void Activate() const;
 
 	void SetMaterial(FString Color);
-
-
-public:
-	/** Returns DummyRoot subobject **/
-	FORCEINLINE class USceneComponent* GetDummyRoot() const { return DummyRoot; }
-	/** Returns BlockMesh subobject **/
-	FORCEINLINE class UStaticMeshComponent* GetBlockMesh() const { return BlockMesh; }
 };
 
 
