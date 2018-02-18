@@ -63,7 +63,7 @@ void ASimonPawn::TriggerClick()
 {
 	if (CurrentBlockFocus)
 	{
-		//CurrentBlockFocus->HandleClicked();
+		CurrentBlockFocus->Activate();
 	}
 }
 

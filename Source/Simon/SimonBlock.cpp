@@ -50,6 +50,7 @@ ASimonBlock::ASimonBlock() : bIsActive(false)
 	BlockMesh->SetSkeletalMesh(SkeletalMesh.Object);
 	BlockMesh->SetRelativeLocation(FVector(0.0f, 0.0f, 20.0f));
 	BlockMesh->SetupAttachment(DummyRoot);
+	BlockMesh->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 
 	GreenMaterial = GMaterial.Object;
 	RedMaterial = RMaterial.Object;
