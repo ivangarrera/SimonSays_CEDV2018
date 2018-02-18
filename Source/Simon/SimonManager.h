@@ -17,7 +17,6 @@ public:
 	// Sets default values for this actor's properties
 	ASimonManager();
 
-	int numBlocks = 4;
 	TArray<FString> colors;
 
 protected:
@@ -28,6 +27,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void NotifyBlockClicked(ASimonBlock* Block);
 	
 private:
 	//Array to keep the reference of the 4 blocks
@@ -44,6 +44,10 @@ private:
 	//Timer to show the sequence every number of seconds (Should change with difficulty or time)
 	float ShowAnother;
 
+	bool isPlaying;
+
+	UPROPERTY()
+		class ASimonPawn* PlayerPawn;
 
 	ASimonBlock* GetRandomBlock() const;
 

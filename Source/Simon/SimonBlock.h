@@ -19,7 +19,7 @@ class ASimonBlock : public AActor
 
 	/** SkeletalMesh component for the clickable block */
 	UPROPERTY()
-		TWeakObjectPtr<USkeletalMeshComponent> BlockMesh;
+		TWeakObjectPtr<UStaticMeshComponent> BlockMesh;
 
 public:
 	ASimonBlock();

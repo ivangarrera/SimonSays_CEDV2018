@@ -29,7 +29,7 @@ ASimonBlock::ASimonBlock() : bIsActive(false)
 	};
 	static FConstructorStatics ConstructorStatics;
 
-	auto SkeletalMesh = ConstructorHelpers::FObjectFinder<USkeletalMesh> (TEXT("SkeletalMesh'/Game/Models/Mesh/SimonBlock/SimonBlock.SimonBlock'"));
+	auto StaticMesh = ConstructorHelpers::FObjectFinder<UStaticMesh> (TEXT("StaticMesh'/Game/Models/Mesh/SimonBlock/SimonBlock.SimonBlock'"));
 
 	auto GMaterial = ConstructorHelpers::FObjectFinder<UMaterial> (TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialGreen.SimonBlock_MaterialGreen'"));
 	auto RMaterial = ConstructorHelpers::FObjectFinder<UMaterial> (TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialRed.SimonBlock_MaterialRed'"));
@@ -46,11 +46,12 @@ ASimonBlock::ASimonBlock() : bIsActive(false)
 	RootComponent = DummyRoot;
 
 	// Create static mesh component
-	BlockMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("BlockMesh"));
-	BlockMesh->SetSkeletalMesh(SkeletalMesh.Object);
+	BlockMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BlockMesh"));
+	BlockMesh->SetStaticMesh(StaticMesh.Object);
 	BlockMesh->SetRelativeLocation(FVector(0.0f, 0.0f, 20.0f));
 	BlockMesh->SetupAttachment(DummyRoot);
-	BlockMesh->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	
+	BlockMesh->SetNotifyRigidBodyCollision(true);
 
 	GreenMaterial = GMaterial.Object;
 	RedMaterial = RMaterial.Object;
@@ -63,8 +64,9 @@ ASimonBlock::ASimonBlock() : bIsActive(false)
 	ActivatedSoundYellow = YSound.Object;
 
 	ActivatedAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("ActivatedAudioComponent"));
-	
+
 }
+
 
 void ASimonBlock::SetMaterial(FString Color)
 {

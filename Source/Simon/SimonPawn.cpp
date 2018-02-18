@@ -2,6 +2,7 @@
 
 #include "SimonPawn.h"
 #include "SimonBlock.h"
+#include "SimonManager.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/PlayerController.h"
@@ -12,6 +13,21 @@ ASimonPawn::ASimonPawn(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
+}
+
+void ASimonPawn::BeginPlay()
+{
+	Super::BeginPlay();
+	//Get a reference to the Simon Manager
+	for (TActorIterator<AActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+	{
+		if (ActorItr->GetName().Contains(FString("SimonManager")))
+		{
+			// Conversion to smart pointer
+			SimonManager = Cast<ASimonManager>(*ActorItr);
+			break;
+		}
+	}
 }
 
 void ASimonPawn::Tick(float DeltaSeconds)
@@ -64,6 +80,7 @@ void ASimonPawn::TriggerClick()
 	if (CurrentBlockFocus)
 	{
 		CurrentBlockFocus->Activate();
+		SimonManager->NotifyBlockClicked(CurrentBlockFocus);
 	}
 }
 
@@ -78,6 +95,7 @@ void ASimonPawn::TraceForBlock(const FVector& Start, const FVector& End, bool bD
 	}
 	if (HitResult.Actor.IsValid())
 	{
+		GEngine->AddOnScreenDebugMessage(0, 5.f, FColor::Red, HitResult.Actor->GetName());
 		ASimonBlock* HitBlock = Cast<ASimonBlock>(HitResult.Actor.Get());
 		if (CurrentBlockFocus != HitBlock)
 		{

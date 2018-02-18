@@ -1,12 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "SimonManager.h"
+#include "SimonPawn.h"
 #include "Components/TextRenderComponent.h"
 #include "Engine/World.h"
 
 
 // Sets default values
-ASimonManager::ASimonManager() : AccumulatedDeltaTime(0.0f), ShowAnother(1.f), Counter(0)
+ASimonManager::ASimonManager() : AccumulatedDeltaTime(0.0f), ShowAnother(1.f), Counter(0), isPlaying(false)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -40,8 +41,11 @@ void ASimonManager::BeginPlay()
 
 		Blocks.Add(NewBlock);
 
-		Rotation.Yaw += 90;
+		Rotation.Yaw -= 90;
 	}
+
+	//Get a reference to the player pawn
+	PlayerPawn = Cast<ASimonPawn>(UGameplayStatics::GetPlayerPawn(this, 0));
 	
 }
 
@@ -53,15 +57,21 @@ void ASimonManager::Tick(float DeltaTime)
 	AccumulatedDeltaTime += DeltaTime;
 
 	//If the there are still blocks in the sequence
-	if (AccumulatedDeltaTime > ShowAnother && Counter < Sequence.Num())
+	if (AccumulatedDeltaTime > ShowAnother && Counter < Sequence.Num() && !isPlaying)
 	{
 		Sequence[Counter]->Activate();
 		Counter++;
 
 		AccumulatedDeltaTime = 0.f;
+
+		if (Counter == Sequence.Num())
+		{
+			isPlaying = true;
+		}
 	}
+
 	//If the sequence has finished, add another block
-	if (Counter == Sequence.Num())
+	if (Counter == Sequence.Num() && !isPlaying)
 	{
 		Sequence.Add(GetRandomBlock());
 		Counter = 0;
@@ -72,4 +82,9 @@ void ASimonManager::Tick(float DeltaTime)
 ASimonBlock* ASimonManager::GetRandomBlock() const
 {
 	return Blocks[FMath::RandRange(0, Blocks.Num() - 1)];
+}
+
+void ASimonManager::NotifyBlockClicked(ASimonBlock* Block)
+{
+	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, Block->GetName());
 }
