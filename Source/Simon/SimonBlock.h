@@ -17,7 +17,7 @@ class ASimonBlock : public AActor
 	UPROPERTY(Category = Block, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class USceneComponent* DummyRoot;
 
-	/** SkeletalMesh component for the clickable block */
+	/** StaticMesh component for the clickable block */
 	UPROPERTY()
 		TWeakObjectPtr<UStaticMeshComponent> BlockMesh;
 
@@ -30,15 +30,15 @@ public:
 	/** String to know in an efficient way which is my color*/
 	FString Color;
 
-	/** Pointer to the actual material */
+	/** Pointer to the different meshes before we know which one is the right one*/
 	UPROPERTY()
-		class UMaterial* GreenMaterial;
+		class UStaticMesh* GreenMesh;
 	UPROPERTY()
-		class UMaterial* RedMaterial;
+		class UStaticMesh* RedMesh;
 	UPROPERTY()
-		class UMaterial* BlueMaterial;
+		class UStaticMesh* BlueMesh;
 	UPROPERTY()
-		class UMaterial* YellowMaterial;
+		class UStaticMesh* YellowMesh;
 
 	/** Audio variables: SoundCue and AudioComponent*/
 	UPROPERTY()

@@ -12,29 +12,10 @@ ASimonBlock::ASimonBlock() : bIsActive(false)
 
 	// Structure to hold one-time initialization
 
-	struct FConstructorStatics
-	{
-		ConstructorHelpers::FObjectFinderOptional<UMaterial> GreenMaterial;
-		ConstructorHelpers::FObjectFinderOptional<UMaterial> RedMaterial;
-		ConstructorHelpers::FObjectFinderOptional<UMaterial> BlueMaterial;
-		ConstructorHelpers::FObjectFinderOptional<UMaterial> YellowMaterial;
-
-		FConstructorStatics()
-			: GreenMaterial(TEXT("/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialGreen.SimonBlock_MaterialGreen"))
-			, RedMaterial(TEXT("/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialRed.SimonBlock_MaterialRed"))
-			, BlueMaterial(TEXT("/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialBlue.SimonBlock_MaterialBlue"))
-			, YellowMaterial(TEXT("/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialYellow.SimonBlock_MaterialYellow"))
-		{
-		}
-	};
-	static FConstructorStatics ConstructorStatics;
-
-	auto StaticMesh = ConstructorHelpers::FObjectFinder<UStaticMesh> (TEXT("StaticMesh'/Game/Models/Mesh/SimonBlock/SimonBlock.SimonBlock'"));
-
-	auto GMaterial = ConstructorHelpers::FObjectFinder<UMaterial> (TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialGreen.SimonBlock_MaterialGreen'"));
-	auto RMaterial = ConstructorHelpers::FObjectFinder<UMaterial> (TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialRed.SimonBlock_MaterialRed'"));
-	auto BMaterial = ConstructorHelpers::FObjectFinder<UMaterial> (TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialBlue.SimonBlock_MaterialBlue'"));
-	auto YMaterial = ConstructorHelpers::FObjectFinder<UMaterial> (TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialYellow.SimonBlock_MaterialYellow'"));
+	auto GMesh = ConstructorHelpers::FObjectFinder<UStaticMesh> (TEXT("StaticMesh'/Game/Models/Mesh/SimonBlock/SimonBlockGreen.SimonBlockGreen'"));
+	auto RMesh = ConstructorHelpers::FObjectFinder<UStaticMesh> (TEXT("StaticMesh'/Game/Models/Mesh/SimonBlock/SimonBlockRed.SimonBlockRed'"));
+	auto BMesh = ConstructorHelpers::FObjectFinder<UStaticMesh> (TEXT("StaticMesh'/Game/Models/Mesh/SimonBlock/SimonBlockBlue.SimonBlockBlue'"));
+	auto YMesh = ConstructorHelpers::FObjectFinder<UStaticMesh> (TEXT("StaticMesh'/Game/Models/Mesh/SimonBlock/SimonBlockYellow.SimonBlockYellow'"));
 
 	auto GSound = ConstructorHelpers::FObjectFinder<USoundCue> (TEXT("'/Game/Audio/GreenSoundCue.GreenSoundCue'"));
 	auto RSound = ConstructorHelpers::FObjectFinder<USoundCue> (TEXT("'/Game/Audio/RedSoundCue.RedSoundCue'"));
@@ -47,16 +28,15 @@ ASimonBlock::ASimonBlock() : bIsActive(false)
 
 	// Create static mesh component
 	BlockMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BlockMesh"));
-	BlockMesh->SetStaticMesh(StaticMesh.Object);
 	BlockMesh->SetRelativeLocation(FVector(0.0f, 0.0f, 20.0f));
 	BlockMesh->SetupAttachment(DummyRoot);
 	
 	BlockMesh->SetNotifyRigidBodyCollision(true);
 
-	GreenMaterial = GMaterial.Object;
-	RedMaterial = RMaterial.Object;
-	BlueMaterial = BMaterial.Object;
-	YellowMaterial = YMaterial.Object;
+	GreenMesh = GMesh.Object;
+	RedMesh = RMesh.Object;
+	BlueMesh = BMesh.Object;
+	YellowMesh = YMesh.Object;
 
 	ActivatedSoundGreen = GSound.Object;
 	ActivatedSoundRed = RSound.Object;
@@ -74,25 +54,25 @@ void ASimonBlock::SetMaterial(FString Color)
 	if (Color.Equals("GREEN"))
 	{
 		// The material to set is Green
-		BlockMesh->SetMaterial(0, GreenMaterial);
+		BlockMesh->SetStaticMesh(GreenMesh);
 		ActivatedAudioComponent->SetSound(ActivatedSoundGreen);
 	}
 	else if (Color.Equals("RED"))
 	{
 		// The material to set is Red
-		BlockMesh->SetMaterial(0, RedMaterial);
+		BlockMesh->SetStaticMesh(RedMesh);
 		ActivatedAudioComponent->SetSound(ActivatedSoundRed);
 	}
 	else if (Color.Equals("BLUE"))
 	{
 		// The material to set is Blue
-		BlockMesh->SetMaterial(0, BlueMaterial);
+		BlockMesh->SetStaticMesh(BlueMesh);
 		ActivatedAudioComponent->SetSound(ActivatedSoundBlue);
 	}
 	else if (Color.Equals("YELLOW"))
 	{
 		// The material to set is Yellow
-		BlockMesh->SetMaterial(0, YellowMaterial);
+		BlockMesh->SetStaticMesh(YellowMesh);
 		ActivatedAudioComponent->SetSound(ActivatedSoundYellow);
 	}
 }
