@@ -7,7 +7,7 @@
 
 
 // Sets default values
-ASimonManager::ASimonManager() : AccumulatedDeltaTime(0.0f), ShowAnother(1.f), Counter(0), isPlaying(false)
+ASimonManager::ASimonManager() : AccumulatedDeltaTime(0.0f), ShowAnother(1.f), PickAnotherBlock(2.f), Counter(0), isPlaying(false), IndexCurrentBlock(0)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -60,6 +60,7 @@ void ASimonManager::Tick(float DeltaTime)
 	if (AccumulatedDeltaTime > ShowAnother && Counter < Sequence.Num() && !isPlaying)
 	{
 		Sequence[Counter]->Activate();
+		GEngine->AddOnScreenDebugMessage(2, 5.f, FColor::Purple, Sequence[Counter]->GetName());
 		Counter++;
 
 		AccumulatedDeltaTime = 0.f;
@@ -68,6 +69,13 @@ void ASimonManager::Tick(float DeltaTime)
 		{
 			isPlaying = true;
 		}
+	}
+
+	// If it's been a long time since you pressed a block, restart the level
+	if (AccumulatedDeltaTime >= PickAnotherBlock)
+	{
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::White, FString("Too much time. You failed."));
+		RestartLevel();
 	}
 
 	//If the sequence has finished, add another block
@@ -86,5 +94,28 @@ ASimonBlock* ASimonManager::GetRandomBlock() const
 
 void ASimonManager::NotifyBlockClicked(ASimonBlock* Block)
 {
-	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Yellow, Block->GetName());
+	if (Sequence[IndexCurrentBlock]->GetName().Equals(Block->GetName()))
+	{
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::White, Block->GetName());
+		IndexCurrentBlock += 1;
+		AccumulatedDeltaTime = 0.f;
+	}
+	else
+	{
+		// If you fail the sequence, restart the level
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::White, FString("You failed, looser."));
+		RestartLevel();
+	}
+
+	if (IndexCurrentBlock == Sequence.Num())
+	{
+		IndexCurrentBlock = 0;
+		isPlaying = false;
+		AccumulatedDeltaTime = 0.f;
+	}
+}
+
+void ASimonManager::RestartLevel()
+{
+	UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
 }
