@@ -52,6 +52,13 @@ private:
 	// Counter to know if the player is hitting blocks in correct order
 	int IndexCurrentBlock;
 
+	// Every time you hit NumberOfBlocksToGoFaster Blocks, the sequence will go faster, 
+	// and you must enter the sequence faster, too.
+	int NumberOfBlocksToGoFaster;
+
+	// Amount of time in which ShowAnother and PickAnotherBlock will decrease
+	float AmmountOfTimeToDecrease;
+
 	UPROPERTY()
 		class ASimonPawn* PlayerPawn;
 

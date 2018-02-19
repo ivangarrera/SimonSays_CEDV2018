@@ -7,7 +7,8 @@
 
 
 // Sets default values
-ASimonManager::ASimonManager() : AccumulatedDeltaTime(0.0f), ShowAnother(1.f), PickAnotherBlock(2.f), Counter(0), isPlaying(false), IndexCurrentBlock(0)
+ASimonManager::ASimonManager() : AccumulatedDeltaTime(0.0f), ShowAnother(1.f), PickAnotherBlock(2.f), Counter(0), isPlaying(false), IndexCurrentBlock(0),
+								 NumberOfBlocksToGoFaster(4), AmmountOfTimeToDecrease(0.25f)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -84,6 +85,7 @@ void ASimonManager::Tick(float DeltaTime)
 		Sequence.Add(GetRandomBlock());
 		Counter = 0;
 	}
+	GEngine->AddOnScreenDebugMessage(1, 1.f, FColor::White, FString::Printf(TEXT("%f, %f"), ShowAnother, PickAnotherBlock));
 
 }
 
@@ -94,6 +96,14 @@ ASimonBlock* ASimonManager::GetRandomBlock() const
 
 void ASimonManager::NotifyBlockClicked(ASimonBlock* Block)
 {
+	// If you Hit enough blocks, the difficulty will increase
+	if (((IndexCurrentBlock + 1) % NumberOfBlocksToGoFaster) == 0)
+	{
+		ShowAnother -= AmmountOfTimeToDecrease;
+		PickAnotherBlock -= AmmountOfTimeToDecrease;
+		NumberOfBlocksToGoFaster += 4;
+	}
+
 	if (Sequence[IndexCurrentBlock]->GetName().Equals(Block->GetName()))
 	{
 		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::White, Block->GetName());
@@ -113,6 +123,7 @@ void ASimonManager::NotifyBlockClicked(ASimonBlock* Block)
 		isPlaying = false;
 		AccumulatedDeltaTime = 0.f;
 	}
+	
 }
 
 void ASimonManager::RestartLevel()
