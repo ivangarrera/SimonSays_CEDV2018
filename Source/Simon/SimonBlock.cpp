@@ -80,5 +80,6 @@ void ASimonBlock::SetMaterial(FString Color)
 void ASimonBlock::Activate() const
 {
 	ActivatedAudioComponent->Play();
+	BlockMesh->SetRenderCustomDepth(true);
 }
 
