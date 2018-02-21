@@ -14,6 +14,19 @@ class ASimonGameMode : public AGameModeBase
 
 public:
 	ASimonGameMode();
+
+	// Variables to choose the game mode
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameMode")
+	bool bIsEasy;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameMode")
+	bool bIsMedium;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameMode")
+	bool bIsHard;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameMode")
+	bool bIsEndless;
 };
 
 

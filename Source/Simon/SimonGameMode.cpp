@@ -4,7 +4,7 @@
 #include "SimonPlayerController.h"
 #include "SimonPawn.h"
 
-ASimonGameMode::ASimonGameMode()
+ASimonGameMode::ASimonGameMode() : bIsEasy(false), bIsMedium(false), bIsHard(false), bIsEndless(false)
 {
 	// no pawn by default
 	DefaultPawnClass = ASimonPawn::StaticClass();

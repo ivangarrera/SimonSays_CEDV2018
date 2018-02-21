@@ -29,10 +29,20 @@ public:
 
 	void NotifyBlockClicked(ASimonBlock* Block);
 
+	UFUNCTION(BlueprintCallable)
+	void GameModeIsReady();
+
+	// Widget to show when the game ends
 	UPROPERTY(EditAnywhere, Category = "Widgets")
 		TSubclassOf<class UUserWidget> WGameEnd;
 	UPROPERTY()
 		class UUserWidget* pWGameEnd;
+
+	// Widget to show when the game is going to start
+	UPROPERTY(EditAnywhere, Category = "Widgets")
+		TSubclassOf<class UUserWidget> WGameStart;
+	UPROPERTY()
+		class UUserWidget* pWGameStart;
 	
 private:
 	// Array to keep the reference of the 4 blocks
@@ -53,6 +63,10 @@ private:
 	float PickAnotherBlock;
 
 	bool isPlaying;
+
+	// Number of rounds the game has
+	int NumberOfRounds;
+	int RoundsCounter;
 
 	// Counter to know if the player is hitting blocks in correct order
 	int IndexCurrentBlock;

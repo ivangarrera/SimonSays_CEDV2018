@@ -2,6 +2,7 @@
 
 #include "SimonManager.h"
 #include "SimonPawn.h"
+#include "SimonGameMode.h"
 #include "Engine.h"
 #include "Blueprint/UserWidget.h"
 #include "Engine/World.h"
@@ -9,7 +10,7 @@
 
 // Sets default values
 ASimonManager::ASimonManager() : AccumulatedDeltaTime(0.0f), ShowAnother(1.f), PickAnotherBlock(2.f), Counter(0), isPlaying(false), IndexCurrentBlock(0),
-								 NumberOfBlocksToGoFaster(4), AmmountOfTimeToDecrease(0.25f)
+								 NumberOfBlocksToGoFaster(4), AmmountOfTimeToDecrease(0.25f), NumberOfRounds(0), RoundsCounter(0)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -25,6 +26,17 @@ ASimonManager::ASimonManager() : AccumulatedDeltaTime(0.0f), ShowAnother(1.f), P
 void ASimonManager::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Create the widget that is going to be displayed when the game is going to start
+	if (WGameStart)
+	{
+		pWGameStart = CreateWidget<UUserWidget>(GetGameInstance(), WGameStart);
+		if (pWGameStart)
+		{
+			pWGameStart->AddToViewport();
+			UGameplayStatics::SetGamePaused(this, true);
+		}
+	}
 
 	FVector Location(0.0f, 0.0f, 20.0f);
 	FRotator Rotation(0.0f, 0.0f, 0.0f);
@@ -49,10 +61,12 @@ void ASimonManager::BeginPlay()
 	//Get a reference to the player pawn
 	PlayerPawn = Cast<ASimonPawn>(UGameplayStatics::GetPlayerPawn(this, 0));
 	
+	// Create the widget that is going to be displayed when the game ends.
 	if (WGameEnd)
 	{
 		pWGameEnd = CreateWidget<UUserWidget>(GetGameInstance(), WGameEnd);
 	}
+
 }
 
 // Called every frame
@@ -85,17 +99,22 @@ void ASimonManager::Tick(float DeltaTime)
 			pWGameEnd->AddToViewport();
 			UGameplayStatics::SetGamePaused(this, true);
 		}
-		//RestartLevel();
 	}
 
 	//If the sequence has finished, add another block
-	if (Counter == Sequence.Num() && !isPlaying)
+	if (Counter == Sequence.Num() && !isPlaying 
+		&& RoundsCounter <= NumberOfRounds)
 	{
 		Sequence.Add(GetRandomBlock());
+		RoundsCounter += 1;
 		Counter = 0;
 	}
-	GEngine->AddOnScreenDebugMessage(1, 1.f, FColor::White, FString::Printf(TEXT("%f, %f"), ShowAnother, PickAnotherBlock));
 
+	// YOU WIN
+	if (RoundsCounter >= NumberOfRounds)
+	{
+		GEngine->AddOnScreenDebugMessage(8, 5.f, FColor::White, FString("YOU WIN"));
+	}
 }
 
 ASimonBlock* ASimonManager::GetRandomBlock() const
@@ -122,14 +141,12 @@ void ASimonManager::NotifyBlockClicked(ASimonBlock* Block)
 	}
 	else
 	{
-		GEngine->AddOnScreenDebugMessage(8, 5.f, FColor::White, FString("Amos a ver si"));
 		// If you fail the sequence, restart the level
 		if (pWGameEnd)
 		{
 			pWGameEnd->AddToViewport();
 			UGameplayStatics::SetGamePaused(this, true);
 		}
-		//RestartLevel();
 	}
 
 	if (IndexCurrentBlock == Sequence.Num())
@@ -144,4 +161,25 @@ void ASimonManager::NotifyBlockClicked(ASimonBlock* Block)
 void ASimonManager::RestartLevel()
 {
 	UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
+}
+
+void ASimonManager::GameModeIsReady()
+{
+	// It is supposed that only one is true at the same time
+	if (GetWorld()->GetAuthGameMode<ASimonGameMode>()->bIsEasy)
+	{
+		NumberOfRounds = 6;
+	}
+	else if (GetWorld()->GetAuthGameMode<ASimonGameMode>()->bIsMedium)
+	{
+		NumberOfRounds = 10;
+	}
+	else if (GetWorld()->GetAuthGameMode<ASimonGameMode>()->bIsHard)
+	{
+		NumberOfRounds = 16;
+	}
+	else if (GetWorld()->GetAuthGameMode<ASimonGameMode>()->bIsEndless)
+	{
+		NumberOfRounds = MAX_int32;
+	}
 }
