@@ -31,8 +31,8 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Widgets")
 		TSubclassOf<class UUserWidget> WGameEnd;
-
-	TWeakObjectPtr<class UUserWidget> pWGameEnd;
+	UPROPERTY()
+		class UUserWidget* pWGameEnd;
 	
 private:
 	// Array to keep the reference of the 4 blocks

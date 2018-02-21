@@ -80,10 +80,10 @@ void ASimonManager::Tick(float DeltaTime)
 	// If it's been a long time since you pressed a block, restart the level
 	if (AccumulatedDeltaTime >= PickAnotherBlock)
 	{
-		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::White, FString("Too much time. You failed."));
-		if (pWGameEnd.IsValid())
+		if (pWGameEnd)
 		{
 			pWGameEnd->AddToViewport();
+			UGameplayStatics::SetGamePaused(this, true);
 		}
 		//RestartLevel();
 	}
@@ -113,16 +113,22 @@ void ASimonManager::NotifyBlockClicked(ASimonBlock* Block)
 		NumberOfBlocksToGoFaster += 4;
 	}
 
+	// Check whether the block clicked is ok or not
 	if (Sequence[IndexCurrentBlock]->GetName().Equals(Block->GetName()))
 	{
-		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::White, Block->GetName());
+		GEngine->AddOnScreenDebugMessage(8, 5.f, FColor::White, Block->GetName() + Sequence[IndexCurrentBlock]->GetName());
 		IndexCurrentBlock += 1;
 		AccumulatedDeltaTime = 0.f;
 	}
 	else
 	{
+		GEngine->AddOnScreenDebugMessage(8, 5.f, FColor::White, FString("Amos a ver si"));
 		// If you fail the sequence, restart the level
-		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::White, FString("You failed, looser."));
+		if (pWGameEnd)
+		{
+			pWGameEnd->AddToViewport();
+			UGameplayStatics::SetGamePaused(this, true);
+		}
 		//RestartLevel();
 	}
 
