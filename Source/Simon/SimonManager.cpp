@@ -2,7 +2,8 @@
 
 #include "SimonManager.h"
 #include "SimonPawn.h"
-#include "Components/TextRenderComponent.h"
+#include "Engine.h"
+#include "Blueprint/UserWidget.h"
 #include "Engine/World.h"
 
 
@@ -48,6 +49,10 @@ void ASimonManager::BeginPlay()
 	//Get a reference to the player pawn
 	PlayerPawn = Cast<ASimonPawn>(UGameplayStatics::GetPlayerPawn(this, 0));
 	
+	if (WGameEnd)
+	{
+		pWGameEnd = CreateWidget<UUserWidget>(GetGameInstance(), WGameEnd);
+	}
 }
 
 // Called every frame
@@ -76,7 +81,11 @@ void ASimonManager::Tick(float DeltaTime)
 	if (AccumulatedDeltaTime >= PickAnotherBlock)
 	{
 		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::White, FString("Too much time. You failed."));
-		RestartLevel();
+		if (pWGameEnd.IsValid())
+		{
+			pWGameEnd->AddToViewport();
+		}
+		//RestartLevel();
 	}
 
 	//If the sequence has finished, add another block
@@ -114,7 +123,7 @@ void ASimonManager::NotifyBlockClicked(ASimonBlock* Block)
 	{
 		// If you fail the sequence, restart the level
 		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::White, FString("You failed, looser."));
-		RestartLevel();
+		//RestartLevel();
 	}
 
 	if (IndexCurrentBlock == Sequence.Num())

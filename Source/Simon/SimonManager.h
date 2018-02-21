@@ -28,6 +28,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void NotifyBlockClicked(ASimonBlock* Block);
+
+	UPROPERTY(EditAnywhere, Category = "Widgets")
+		TSubclassOf<class UUserWidget> WGameEnd;
+
+	TWeakObjectPtr<class UUserWidget> pWGameEnd;
 	
 private:
 	// Array to keep the reference of the 4 blocks
