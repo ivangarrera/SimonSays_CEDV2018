@@ -7,7 +7,7 @@
 #include "Engine/StaticMesh.h"
 #include "Materials/MaterialInstance.h"
 
-ASimonBlock::ASimonBlock() : bIsActive(false)
+ASimonBlock::ASimonBlock() : bIsActive(false), pitch(1.0f)
 {
 
 	// Structure to hold one-time initialization
@@ -83,3 +83,8 @@ void ASimonBlock::Activate() const
 	BlockMesh->SetRenderCustomDepth(true);
 }
 
+void ASimonBlock::IncreasePitch()
+{
+	pitch += 0.1f;
+	ActivatedAudioComponent->SetPitchMultiplier(pitch);
+}

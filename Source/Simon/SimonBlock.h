@@ -53,11 +53,15 @@ public:
 	UPROPERTY()
 		class UAudioComponent* ActivatedAudioComponent;
 
-
+	void IncreasePitch();
 
 	void Activate() const;
 
 	void SetMaterial(FString Color);
+
+private:
+	// Variable for controlling the pitch of the sound.
+	float pitch;
 };
 
 

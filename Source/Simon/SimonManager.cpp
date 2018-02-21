@@ -127,9 +127,7 @@ void ASimonManager::NotifyBlockClicked(ASimonBlock* Block)
 	// If you Hit enough blocks, the difficulty will increase
 	if (((IndexCurrentBlock + 1) % NumberOfBlocksToGoFaster) == 0)
 	{
-		ShowAnother -= AmmountOfTimeToDecrease;
-		PickAnotherBlock -= AmmountOfTimeToDecrease;
-		NumberOfBlocksToGoFaster += 4;
+		IncreaseSpeed();
 	}
 
 	// Check whether the block clicked is ok or not
@@ -181,5 +179,17 @@ void ASimonManager::GameModeIsReady()
 	else if (GetWorld()->GetAuthGameMode<ASimonGameMode>()->bIsEndless)
 	{
 		NumberOfRounds = MAX_int32;
+	}
+}
+
+void ASimonManager::IncreaseSpeed()
+{
+	ShowAnother -= AmmountOfTimeToDecrease;
+	PickAnotherBlock -= AmmountOfTimeToDecrease;
+	NumberOfBlocksToGoFaster += 4;
+
+	for (auto block : Blocks)
+	{
+		block->IncreasePitch();
 	}
 }

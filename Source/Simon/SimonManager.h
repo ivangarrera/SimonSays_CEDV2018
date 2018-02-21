@@ -84,4 +84,6 @@ private:
 	ASimonBlock* GetRandomBlock() const;
 	
 	void RestartLevel();
+
+	void IncreaseSpeed();
 };
