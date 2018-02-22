@@ -67,6 +67,11 @@ void ASimonManager::BeginPlay()
 		pWGameEnd = CreateWidget<UUserWidget>(GetGameInstance(), WGameEnd);
 	}
 
+	// Create the widget that is going to be displayed when the player win
+	if (WWinGame)
+	{
+		pWWinGame = CreateWidget<UUserWidget>(GetGameInstance(), WWinGame);
+	}
 }
 
 // Called every frame
@@ -80,7 +85,6 @@ void ASimonManager::Tick(float DeltaTime)
 	if (AccumulatedDeltaTime > ShowAnother && Counter < Sequence.Num() && !isPlaying)
 	{
 		Sequence[Counter]->Activate();
-		GEngine->AddOnScreenDebugMessage(2, 5.f, FColor::Purple, Sequence[Counter]->GetName());
 		Counter++;
 
 		AccumulatedDeltaTime = 0.f;
@@ -88,6 +92,7 @@ void ASimonManager::Tick(float DeltaTime)
 		if (Counter == Sequence.Num())
 		{
 			isPlaying = true;
+			RoundsCounter += 1;
 		}
 	}
 
@@ -106,14 +111,17 @@ void ASimonManager::Tick(float DeltaTime)
 		&& RoundsCounter <= NumberOfRounds)
 	{
 		Sequence.Add(GetRandomBlock());
-		RoundsCounter += 1;
 		Counter = 0;
 	}
 
 	// YOU WIN
 	if (RoundsCounter >= NumberOfRounds)
 	{
-		GEngine->AddOnScreenDebugMessage(8, 5.f, FColor::White, FString("YOU WIN"));
+		if (pWWinGame)
+		{
+			pWGameStart->AddToViewport();
+			UGameplayStatics::SetGamePaused(this, true);
+		}
 	}
 }
 
@@ -133,7 +141,6 @@ void ASimonManager::NotifyBlockClicked(ASimonBlock* Block)
 	// Check whether the block clicked is ok or not
 	if (Sequence[IndexCurrentBlock]->GetName().Equals(Block->GetName()))
 	{
-		GEngine->AddOnScreenDebugMessage(8, 5.f, FColor::White, Block->GetName() + Sequence[IndexCurrentBlock]->GetName());
 		IndexCurrentBlock += 1;
 		AccumulatedDeltaTime = 0.f;
 	}

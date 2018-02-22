@@ -95,7 +95,6 @@ void ASimonPawn::TraceForBlock(const FVector& Start, const FVector& End, bool bD
 	}
 	if (HitResult.Actor.IsValid())
 	{
-		GEngine->AddOnScreenDebugMessage(0, 5.f, FColor::Red, HitResult.Actor->GetName());
 		ASimonBlock* HitBlock = Cast<ASimonBlock>(HitResult.Actor.Get());
 		if (CurrentBlockFocus != HitBlock)
 		{
