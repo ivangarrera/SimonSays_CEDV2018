@@ -79,7 +79,7 @@ void ASimonPawn::TriggerClick()
 {
 	if (CurrentBlockFocus)
 	{
-		CurrentBlockFocus->Activate();
+		CurrentBlockFocus->Activate(false);
 		SimonManager->NotifyBlockClicked(CurrentBlockFocus);
 	}
 }
@@ -100,11 +100,11 @@ void ASimonPawn::TraceForBlock(const FVector& Start, const FVector& End, bool bD
 		{
 			if (CurrentBlockFocus)
 			{
-				//CurrentBlockFocus->Highlight(false);
+				CurrentBlockFocus->Highlight(false);
 			}
 			if (HitBlock)
 			{
-				//HitBlock->Highlight(true);
+				HitBlock->Highlight(true);
 			}
 			CurrentBlockFocus = HitBlock;
 		}

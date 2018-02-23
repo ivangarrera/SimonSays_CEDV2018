@@ -80,7 +80,24 @@ void ASimonBlock::SetMaterial(FString Color)
 void ASimonBlock::Activate() const
 {
 	ActivatedAudioComponent->Play();
-	BlockMesh->SetRenderCustomDepth(true);
+	Highlight(true);
+}
+
+void ASimonBlock::Activate(bool bHighlight) const
+{
+	ActivatedAudioComponent->Play();
+	if (bHighlight)
+		Highlight(true);
+}
+
+void ASimonBlock::Deactivate() const
+{
+	Highlight(false);
+}
+
+void ASimonBlock::Highlight(bool bHighlight) const
+{
+	BlockMesh->SetRenderCustomDepth(bHighlight);
 }
 
 void ASimonBlock::IncreasePitch()

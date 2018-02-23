@@ -84,6 +84,8 @@ void ASimonManager::Tick(float DeltaTime)
 	//If the there are still blocks in the sequence
 	if (AccumulatedDeltaTime > ShowAnother && Counter < Sequence.Num() && !isPlaying)
 	{
+		if (Counter > 0)
+			Sequence[Counter - 1]->Deactivate();
 		Sequence[Counter]->Activate();
 		Counter++;
 

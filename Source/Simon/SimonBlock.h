@@ -56,6 +56,10 @@ public:
 	void IncreasePitch();
 
 	void Activate() const;
+	void Activate(bool bHighlight) const;
+	void Deactivate() const;
+
+	void Highlight(bool bHighlight) const;
 
 	void SetMaterial(FString Color);
 
