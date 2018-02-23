@@ -84,8 +84,6 @@ void ASimonBlock::Activate() const
 	ActivatedAudioComponent->SetVolumeMultiplier(volume);
 	ActivatedAudioComponent->Play();
 	BlockMesh->SetRenderCustomDepth(true);
-
-	GEngine->AddOnScreenDebugMessage(1, 5, FColor::Yellow, FString("Volume was:") + FString::SanitizeFloat(volume));
 }
 
 void ASimonBlock::IncreasePitch()

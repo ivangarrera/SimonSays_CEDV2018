@@ -74,6 +74,9 @@ private:
 	int NumberOfRounds;
 	int RoundsCounter;
 
+	// Boolean to control when the player wins
+	bool Won;
+
 	// Counter to know if the player is hitting blocks in correct order
 	int IndexCurrentBlock;
 
