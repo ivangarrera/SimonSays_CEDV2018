@@ -9,7 +9,7 @@
 
 
 // Sets default values
-ASimonManager::ASimonManager() : AccumulatedDeltaTime(0.0f), ShowAnother(1.f), PickAnotherBlock(2.f), Counter(0), isPlaying(false), IndexCurrentBlock(0),
+ASimonManager::ASimonManager() : AccumulatedDeltaTime(0.0f), ShowAnother(1.f), PickAnotherBlock(5.f), Counter(0), isPlaying(false), IndexCurrentBlock(0),
 								 NumberOfBlocksToGoFaster(4), AmmountOfTimeToDecrease(0.25f), NumberOfRounds(0), RoundsCounter(0)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.

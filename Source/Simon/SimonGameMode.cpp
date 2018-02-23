@@ -26,3 +26,14 @@ void ASimonGameMode::ReadJsonFile()
 	FJsonSerializer::Deserialize(JsonReader, JsonObject);
 
 }
+
+void ASimonGameMode::SetVolume(float volume)
+{
+	Volume = volume;
+	GEngine->AddOnScreenDebugMessage(0, 5, FColor::Red, FString("Volume is:") + FString::SanitizeFloat(Volume));
+}
+
+float ASimonGameMode::GetVolume() const
+{
+	return Volume;
+}
