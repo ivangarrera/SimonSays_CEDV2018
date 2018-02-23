@@ -27,6 +27,11 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameMode")
 	bool bIsEndless;
+
+	TSharedPtr<FJsonObject> JsonObject;
+
+	UFUNCTION(BlueprintCallable)
+	void ReadJsonFile();
 };
 
 
