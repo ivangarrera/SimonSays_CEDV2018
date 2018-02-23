@@ -37,7 +37,7 @@ void ASimonManager::BeginPlay()
 			UGameplayStatics::SetGamePaused(this, true);
 		}
 	}
-
+	
 	FVector Location(0.0f, 0.0f, 20.0f);
 	FRotator Rotation(0.0f, 0.0f, 0.0f);
 	FVector Scale(175.f, 175.f, 1.f);
