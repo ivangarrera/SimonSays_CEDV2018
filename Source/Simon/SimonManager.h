@@ -49,6 +49,12 @@ public:
 		TSubclassOf<class UUserWidget> WWinGame;
 	UPROPERTY()
 		class UUserWidget* pWWinGame;
+
+	// Widget to see the score obtained
+	UPROPERTY(EditAnywhere, Category = "Widgets")
+		TSubclassOf<class UUserWidget> WScore;
+	UPROPERTY()
+		class UUserWidget* pWScore;
 	
 private:
 	// Array to keep the reference of the 4 blocks
