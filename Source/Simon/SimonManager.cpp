@@ -97,6 +97,10 @@ void ASimonManager::Tick(float DeltaTime)
 			RoundsCounter += 1;
 		}
 	}
+	if (AccumulatedDeltaTime > ShowAnother && Counter == Sequence.Num())
+	{
+		Sequence[Counter - 1]->Deactivate();
+	}
 
 	// If it's been a long time since you pressed a block, restart the level
 	if (AccumulatedDeltaTime >= PickAnotherBlock)

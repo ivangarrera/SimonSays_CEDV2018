@@ -28,6 +28,7 @@ void ASimonPawn::BeginPlay()
 			break;
 		}
 	}
+
 }
 
 void ASimonPawn::Tick(float DeltaSeconds)
@@ -100,11 +101,11 @@ void ASimonPawn::TraceForBlock(const FVector& Start, const FVector& End, bool bD
 		{
 			if (CurrentBlockFocus)
 			{
-				CurrentBlockFocus->Highlight(false);
+				CurrentBlockFocus->OnMouseHover(false);
 			}
 			if (HitBlock)
 			{
-				HitBlock->Highlight(true);
+				HitBlock->OnMouseHover(true);
 			}
 			CurrentBlockFocus = HitBlock;
 		}
