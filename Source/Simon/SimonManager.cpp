@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "SimonManager.h"
+#include "math.h"
 #include "SimonPawn.h"
 #include "SimonGameMode.h"
 #include "Engine.h"
@@ -10,7 +11,7 @@
 
 // Sets default values
 ASimonManager::ASimonManager() : AccumulatedDeltaTime(0.0f), ShowAnother(1.f), PickAnotherBlock(5.f), Counter(0), isPlaying(false), IndexCurrentBlock(0),
-								 NumberOfBlocksToGoFaster(4), AmmountOfTimeToDecrease(0.25f), NumberOfRounds(0), RoundsCounter(0), Won(false)
+								 NumberOfBlocksToGoFaster(4), NumberOfRounds(0), RoundsCounter(0), Won(false)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -162,7 +163,7 @@ void ASimonManager::NotifyBlockClicked(ASimonBlock* Block)
 	// If you Hit enough blocks, the difficulty will increase
 	if (((IndexCurrentBlock + 1) % NumberOfBlocksToGoFaster) == 0)
 	{
-		IncreaseSpeed();
+		IncreaseSpeed(IndexCurrentBlock + 1);
 	}
 
 	// Check whether the block clicked is ok or not
@@ -234,10 +235,13 @@ void ASimonManager::GameModeIsReady()
 	}
 }
 
-void ASimonManager::IncreaseSpeed()
+void ASimonManager::IncreaseSpeed(double Round)
 {
-	ShowAnother -= AmmountOfTimeToDecrease;
-	PickAnotherBlock -= AmmountOfTimeToDecrease;
+	// Calculate the logarithm in base 60 (so the speed increases accordingly)(This means top wave is 60
+	double NewTime = 1 - (log(Round) / log(60));
+
+	ShowAnother = NewTime;
+	PickAnotherBlock -= NewTime;
 	NumberOfBlocksToGoFaster += 4;
 
 	for (auto block : Blocks)
