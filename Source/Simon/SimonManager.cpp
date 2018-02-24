@@ -9,8 +9,8 @@
 
 
 // Sets default values
-ASimonManager::ASimonManager() : AccumulatedDeltaTime(0.0f), ShowAnother(1.f), PickAnotherBlock(2.f), Counter(0), isPlaying(false), IndexCurrentBlock(0),
-								 NumberOfBlocksToGoFaster(4), AmmountOfTimeToDecrease(0.25f), NumberOfRounds(0), RoundsCounter(0)
+ASimonManager::ASimonManager() : AccumulatedDeltaTime(0.0f), ShowAnother(1.f), PickAnotherBlock(5.f), Counter(0), isPlaying(false), IndexCurrentBlock(0),
+								 NumberOfBlocksToGoFaster(4), AmmountOfTimeToDecrease(0.25f), NumberOfRounds(0), RoundsCounter(0), Won(false)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -136,11 +136,11 @@ void ASimonManager::Tick(float DeltaTime)
 	}
 
 	// YOU WIN
-	if (RoundsCounter >= NumberOfRounds)
+	if (RoundsCounter >= NumberOfRounds && Won)
 	{
 		if (pWWinGame)
 		{
-			pWGameStart->AddToViewport();
+			pWWinGame->AddToViewport();
 			UGameplayStatics::SetGamePaused(this, true);
 		}
 	}
@@ -187,8 +187,14 @@ void ASimonManager::NotifyBlockClicked(ASimonBlock* Block)
 		}
 	}
 
+	// If you get the whole sequence right
 	if (IndexCurrentBlock == Sequence.Num())
 	{
+		if (IndexCurrentBlock == NumberOfRounds)
+		{
+			Won = true;
+		}
+
 		IndexCurrentBlock = 0;
 		isPlaying = false;
 		AccumulatedDeltaTime = 0.f;

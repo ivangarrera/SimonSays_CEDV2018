@@ -33,7 +33,12 @@ public:
 	void ReadJsonFile();
 
 	void WriteJsonFile();
+
+	UFUNCTION(BlueprintCallable)
+	void SetVolume(float volume);
+
+	float GetVolume() const;
 };
 
-
+static float Volume = 0.75;
 

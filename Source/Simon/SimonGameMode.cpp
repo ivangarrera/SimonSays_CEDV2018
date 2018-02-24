@@ -75,3 +75,13 @@ void ASimonGameMode::WriteJsonFile()
 	FJsonSerializer::Serialize(JsonObject.ToSharedRef(), JsonWriter);
 	FFileHelper::SaveStringToFile(*JsonStr, *FullPath);
 }
+
+void ASimonGameMode::SetVolume(float volume)
+{
+	Volume = volume;
+}
+
+float ASimonGameMode::GetVolume() const
+{
+	return Volume;
+}
