@@ -35,10 +35,15 @@ public:
 	void WriteJsonFile();
 
 	UFUNCTION(BlueprintCallable)
-	void SetVolume(float volume);
+		void SetVolume(float volume);
+
+	UFUNCTION(BlueprintCallable)
+		void SetPianoAudio(bool piano);
 
 	float GetVolume() const;
+	bool GetPiano() const;
 };
 
 static float Volume = 0.75;
 
+static bool Piano = false;

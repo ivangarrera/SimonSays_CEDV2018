@@ -23,6 +23,11 @@ ASimonBlock::ASimonBlock() : bIsActive(false), pitch(1.0f)
 	auto BSound = ConstructorHelpers::FObjectFinder<USoundCue> (TEXT("'/Game/Audio/BlueSoundCue.BlueSoundCue'"));
 	auto YSound = ConstructorHelpers::FObjectFinder<USoundCue> (TEXT("'/Game/Audio/YellowSoundCue.YellowSoundCue'"));
 
+	auto GSoundP = ConstructorHelpers::FObjectFinder<USoundCue>(TEXT("'/Game/Audio/GreenSoundCuePiano.GreenSoundCuePiano'"));
+	auto RSoundP = ConstructorHelpers::FObjectFinder<USoundCue>(TEXT("'/Game/Audio/RedSoundCuePiano.RedSoundCuePiano'"));
+	auto BSoundP = ConstructorHelpers::FObjectFinder<USoundCue>(TEXT("'/Game/Audio/BlueSoundCuePiano.BlueSoundCuePiano'"));
+	auto YSoundP = ConstructorHelpers::FObjectFinder<USoundCue>(TEXT("'/Game/Audio/YellowSoundCuePiano.YellowSoundCuePiano'"));
+
 	auto GMaterial = ConstructorHelpers::FObjectFinder<UMaterial>(TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialGreen.SimonBlock_MaterialGreen'"));
 	auto RMaterial = ConstructorHelpers::FObjectFinder<UMaterial>(TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialRed.SimonBlock_MaterialRed'"));
 	auto BMaterial = ConstructorHelpers::FObjectFinder<UMaterial>(TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialBlue.SimonBlock_MaterialBlue'"));
@@ -54,6 +59,11 @@ ASimonBlock::ASimonBlock() : bIsActive(false), pitch(1.0f)
 	ActivatedSoundBlue = BSound.Object;
 	ActivatedSoundYellow = YSound.Object;
 
+	ActivatedSoundGreenPiano = GSoundP.Object;
+	ActivatedSoundRedPiano = RSoundP.Object;
+	ActivatedSoundBluePiano = BSoundP.Object;
+	ActivatedSoundYellowPiano = YSoundP.Object;
+
 	GreenHighlightMaterial = GHMaterial.Object;
 	RedHighlightMaterial = RHMaterial.Object;
 	BlueHighlightMaterial = BHMaterial.Object;
@@ -75,25 +85,53 @@ void ASimonBlock::SetMaterial(FString Color)
 	{
 		// The material to set is Green
 		BlockMesh->SetStaticMesh(GreenMesh);
-		ActivatedAudioComponent->SetSound(ActivatedSoundGreen);
+		if (GetWorld()->GetAuthGameMode<ASimonGameMode>()->GetPiano())
+		{
+			ActivatedAudioComponent->SetSound(ActivatedSoundGreenPiano);
+		}
+		else
+		{
+			ActivatedAudioComponent->SetSound(ActivatedSoundGreen);
+		}
 	}
 	else if (Color.Equals("RED"))
 	{
 		// The material to set is Red
 		BlockMesh->SetStaticMesh(RedMesh);
-		ActivatedAudioComponent->SetSound(ActivatedSoundRed);
+		if (GetWorld()->GetAuthGameMode<ASimonGameMode>()->GetPiano())
+		{
+			ActivatedAudioComponent->SetSound(ActivatedSoundRedPiano);
+		}
+		else
+		{
+			ActivatedAudioComponent->SetSound(ActivatedSoundRed);
+		}
 	}
 	else if (Color.Equals("BLUE"))
 	{
 		// The material to set is Blue
 		BlockMesh->SetStaticMesh(BlueMesh);
-		ActivatedAudioComponent->SetSound(ActivatedSoundBlue);
+		if (GetWorld()->GetAuthGameMode<ASimonGameMode>()->GetPiano())
+		{
+			ActivatedAudioComponent->SetSound(ActivatedSoundBluePiano);
+		}
+		else
+		{
+			ActivatedAudioComponent->SetSound(ActivatedSoundBlue);
+		}
 	}
 	else if (Color.Equals("YELLOW"))
 	{
 		// The material to set is Yellow
 		BlockMesh->SetStaticMesh(YellowMesh);
-		ActivatedAudioComponent->SetSound(ActivatedSoundYellow);
+		if (GetWorld()->GetAuthGameMode<ASimonGameMode>()->GetPiano())
+		{
+			ActivatedAudioComponent->SetSound(ActivatedSoundYellowPiano);
+		}
+		else
+		{
+			ActivatedAudioComponent->SetSound(ActivatedSoundYellow);
+		}
 	}
 
 	this->Color = Color;
