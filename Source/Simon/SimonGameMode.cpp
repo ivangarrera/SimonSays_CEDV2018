@@ -32,7 +32,7 @@ void ASimonGameMode::ReadJsonFile()
 		{
 			TSharedPtr<FJsonValue> value = objArray[i];
 			TSharedPtr<FJsonObject> json = value->AsObject();
-
+      
 			FString name = json->GetStringField(TEXT("Name"));
 			FString round = json->GetStringField(TEXT("Round"));
 			RecordsMap.Emplace(name, round);
