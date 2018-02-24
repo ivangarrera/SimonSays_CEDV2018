@@ -51,7 +51,7 @@ void ASimonGameMode::WriteJsonFile()
 	// Record object. It has the following form:
 	/*  {
 			"Name":"the_name",
-			"Round":"th_round"
+			"Round":"the_round"
 		}
 	*/
 	TSharedPtr<FJsonObject> JsonRecordObject = MakeShareable(new FJsonObject());

@@ -19,6 +19,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+private:
+	FString RecordsText;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -29,4 +32,7 @@ public:
 	
 	UPROPERTY()
 	class UUserWidget* pWRecords;
+
+	UPROPERTY()
+	class UTextBlock* pWRecordsText;
 };

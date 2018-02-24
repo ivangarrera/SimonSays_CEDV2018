@@ -28,10 +28,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameMode")
 	bool bIsEndless;
 
-	TMultiMap<FString, FString> RecordsMap;
+	TMap<FString, FString> RecordsMap;
 
 	void ReadJsonFile();
   
+	UFUNCTION(BlueprintCallable)
 	void WriteJsonFile();
 
 	UFUNCTION(BlueprintCallable)

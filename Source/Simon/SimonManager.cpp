@@ -122,11 +122,6 @@ void ASimonManager::Tick(float DeltaTime)
 			// Add new punctuation if modality is Endless
 			if (GetWorld()->GetAuthGameMode<ASimonGameMode>()->bIsEndless)
 			{
-				FString Punctuation = "";
-				Punctuation.AppendInt(RoundsCounter);
-				GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordsMap.Emplace("Default", Punctuation);
-				GetWorld()->GetAuthGameMode<ASimonGameMode>()->WriteJsonFile();
-
 				// Show the score widget
 				pWScore->AddToViewport();
 			}
@@ -182,11 +177,6 @@ void ASimonManager::NotifyBlockClicked(ASimonBlock* Block)
 			// Add new punctuation if modality is Endless
 			if (GetWorld()->GetAuthGameMode<ASimonGameMode>()->bIsEndless)
 			{
-				FString Punctuation = "";
-				Punctuation.AppendInt(RoundsCounter);
-				GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordsMap.Emplace("Default", Punctuation);
-				GetWorld()->GetAuthGameMode<ASimonGameMode>()->WriteJsonFile();
-
 				// Show the widget
 				pWScore->AddToViewport();
 			}
@@ -244,4 +234,11 @@ void ASimonManager::IncreaseSpeed()
 	{
 		block->IncreasePitch();
 	}
+}
+
+void ASimonManager::AddCurrentRecord(FString Name)
+{
+	FString Punctuation = "";
+	Punctuation.AppendInt(RoundsCounter);
+	GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordsMap.Emplace(Name, Punctuation);
 }
