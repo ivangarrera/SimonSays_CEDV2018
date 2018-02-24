@@ -23,6 +23,16 @@ ASimonBlock::ASimonBlock() : bIsActive(false), pitch(1.0f)
 	auto BSound = ConstructorHelpers::FObjectFinder<USoundCue> (TEXT("'/Game/Audio/BlueSoundCue.BlueSoundCue'"));
 	auto YSound = ConstructorHelpers::FObjectFinder<USoundCue> (TEXT("'/Game/Audio/YellowSoundCue.YellowSoundCue'"));
 
+	auto GMaterial = ConstructorHelpers::FObjectFinder<UMaterial>(TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialGreen.SimonBlock_MaterialGreen'"));
+	auto RMaterial = ConstructorHelpers::FObjectFinder<UMaterial>(TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialRed.SimonBlock_MaterialRed'"));
+	auto BMaterial = ConstructorHelpers::FObjectFinder<UMaterial>(TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialBlue.SimonBlock_MaterialBlue'"));
+	auto YMaterial = ConstructorHelpers::FObjectFinder<UMaterial>(TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialYellow.SimonBlock_MaterialYellow'"));
+
+	auto GHMaterial = ConstructorHelpers::FObjectFinder<UMaterial>(TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialGreen_Highlighted.SimonBlock_MaterialGreen_Highlighted'"));
+	auto RHMaterial = ConstructorHelpers::FObjectFinder<UMaterial>(TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialRed_Highlighted.SimonBlock_MaterialRed_Highlighted'"));
+	auto BHMaterial = ConstructorHelpers::FObjectFinder<UMaterial>(TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialBlue_Highlighted.SimonBlock_MaterialBlue_Highlighted'"));
+	auto YHMaterial = ConstructorHelpers::FObjectFinder<UMaterial>(TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialYellow_Highlighted.SimonBlock_MaterialYellow_Highlighted'"));
+
 	// Create dummy root scene component	
 	DummyRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Dummy0"));
 	RootComponent = DummyRoot;
@@ -44,6 +54,16 @@ ASimonBlock::ASimonBlock() : bIsActive(false), pitch(1.0f)
 	ActivatedSoundBlue = BSound.Object;
 	ActivatedSoundYellow = YSound.Object;
 
+	GreenHighlightMaterial = GHMaterial.Object;
+	RedHighlightMaterial = RHMaterial.Object;
+	BlueHighlightMaterial = BHMaterial.Object;
+	YellowHighlightMaterial = YHMaterial.Object;
+
+	GreenMaterial = GMaterial.Object;
+	RedMaterial = RMaterial.Object;
+	BlueMaterial = BMaterial.Object;
+	YellowMaterial = YMaterial.Object;
+
 	ActivatedAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("ActivatedAudioComponent"));
 
 }
@@ -51,7 +71,6 @@ ASimonBlock::ASimonBlock() : bIsActive(false), pitch(1.0f)
 
 void ASimonBlock::SetMaterial(FString Color)
 {
-
 	if (Color.Equals("GREEN"))
 	{
 		// The material to set is Green
@@ -76,6 +95,8 @@ void ASimonBlock::SetMaterial(FString Color)
 		BlockMesh->SetStaticMesh(YellowMesh);
 		ActivatedAudioComponent->SetSound(ActivatedSoundYellow);
 	}
+
+	this->Color = Color;
 }
 
 void ASimonBlock::Activate() const
@@ -83,7 +104,74 @@ void ASimonBlock::Activate() const
 	float volume = GetWorld()->GetAuthGameMode<ASimonGameMode>()->GetVolume();
 	ActivatedAudioComponent->SetVolumeMultiplier(volume);
 	ActivatedAudioComponent->Play();
-	BlockMesh->SetRenderCustomDepth(true);
+	Highlight(true);
+}
+
+void ASimonBlock::Activate(bool bHighlight) const
+{
+	ActivatedAudioComponent->Play();
+	if (bHighlight)
+		Highlight(true);
+}
+
+void ASimonBlock::Deactivate() const
+{
+	Highlight(false);
+}
+
+void ASimonBlock::Highlight(bool bHighlight) const
+{
+	if (bHighlight)
+	{
+		if (Color.Equals("GREEN"))
+		{
+			auto GDynamicMaterial = UMaterialInstanceDynamic::Create(GreenHighlightMaterial, BlockMesh.Get());
+			BlockMesh->SetMaterial(0, GDynamicMaterial);
+		}
+		else if (Color.Equals("RED"))
+		{
+			auto GDynamicMaterial = UMaterialInstanceDynamic::Create(RedHighlightMaterial, BlockMesh.Get());
+			BlockMesh->SetMaterial(0, GDynamicMaterial);
+		}
+		else if (Color.Equals("BLUE"))
+		{
+			auto GDynamicMaterial = UMaterialInstanceDynamic::Create(BlueHighlightMaterial, BlockMesh.Get());
+			BlockMesh->SetMaterial(0, GDynamicMaterial);
+		}
+		else if (Color.Equals("YELLOW"))
+		{
+			auto GDynamicMaterial = UMaterialInstanceDynamic::Create(YellowHighlightMaterial, BlockMesh.Get());
+			BlockMesh->SetMaterial(0, GDynamicMaterial);
+		}
+	}
+	else
+	{
+		if (Color.Equals("GREEN"))
+		{
+			auto GDynamicMaterial = UMaterialInstanceDynamic::Create(GreenMaterial, BlockMesh.Get());
+			BlockMesh->SetMaterial(0, GDynamicMaterial);
+		}
+		else if (Color.Equals("RED"))
+		{
+			auto GDynamicMaterial = UMaterialInstanceDynamic::Create(RedMaterial, BlockMesh.Get());
+			BlockMesh->SetMaterial(0, GDynamicMaterial);
+		}
+		else if (Color.Equals("BLUE"))
+		{
+			auto GDynamicMaterial = UMaterialInstanceDynamic::Create(BlueMaterial, BlockMesh.Get());
+			BlockMesh->SetMaterial(0, GDynamicMaterial);
+		}
+		else if (Color.Equals("YELLOW"))
+		{
+			auto GDynamicMaterial = UMaterialInstanceDynamic::Create(YellowMaterial, BlockMesh.Get());
+			BlockMesh->SetMaterial(0, GDynamicMaterial);
+		}
+	}
+}
+
+void ASimonBlock::OnMouseHover(bool bHovered) const
+{
+	BlockMesh->SetRenderCustomDepth(bHovered);
 }
 
 void ASimonBlock::IncreasePitch()
