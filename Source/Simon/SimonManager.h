@@ -49,6 +49,12 @@ public:
 		TSubclassOf<class UUserWidget> WWinGame;
 	UPROPERTY()
 		class UUserWidget* pWWinGame;
+
+	// Widget to see the score obtained
+	UPROPERTY(EditAnywhere, Category = "Widgets")
+		TSubclassOf<class UUserWidget> WScore;
+	UPROPERTY()
+		class UUserWidget* pWScore;
 	
 private:
 	// Array to keep the reference of the 4 blocks
@@ -73,6 +79,9 @@ private:
 	// Number of rounds the game has
 	int NumberOfRounds;
 	int RoundsCounter;
+
+	// Boolean to control when the player wins
+	bool Won;
 
 	// Counter to know if the player is hitting blocks in correct order
 	int IndexCurrentBlock;

@@ -2,6 +2,7 @@
 
 #include "SimonBlock.h"
 #include "Components/AudioComponent.h"
+#include "SimonGameMode.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/StaticMesh.h"
@@ -100,6 +101,8 @@ void ASimonBlock::SetMaterial(FString Color)
 
 void ASimonBlock::Activate() const
 {
+	float volume = GetWorld()->GetAuthGameMode<ASimonGameMode>()->GetVolume();
+	ActivatedAudioComponent->SetVolumeMultiplier(volume);
 	ActivatedAudioComponent->Play();
 	Highlight(true);
 }

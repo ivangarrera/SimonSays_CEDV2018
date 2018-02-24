@@ -6,6 +6,8 @@
 
 .Plugins/CWButton/Binaries/*
 
-Plugins/CWButton/Intermediate/*
+.Plugins/CWButton/Intermediate/*
+
+.Content/StarterContent/*
 
 *.sln
