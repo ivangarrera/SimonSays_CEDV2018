@@ -40,6 +40,24 @@ public:
 	UPROPERTY()
 		class UStaticMesh* YellowMesh;
 
+	UPROPERTY()
+		class UMaterial* GreenMaterial;
+	UPROPERTY()
+		class UMaterial* RedMaterial;
+	UPROPERTY()
+		class UMaterial* BlueMaterial;
+	UPROPERTY()
+		class UMaterial* YellowMaterial;
+
+	UPROPERTY()
+		class UMaterial* GreenHighlightMaterial;
+	UPROPERTY()
+		class UMaterial* RedHighlightMaterial;
+	UPROPERTY()
+		class UMaterial* BlueHighlightMaterial;
+	UPROPERTY()
+		class UMaterial* YellowHighlightMaterial;
+
 	/** Audio variables: SoundCue and AudioComponent*/
 	UPROPERTY()
 		class USoundBase* ActivatedSoundGreen;
@@ -56,6 +74,12 @@ public:
 	void IncreasePitch();
 
 	void Activate() const;
+	void Activate(bool bHighlight) const;
+	void Deactivate() const;
+
+	void Highlight(bool bHighlight) const;
+
+	void OnMouseHover(bool bHovered) const;
 
 	void SetMaterial(FString Color);
 

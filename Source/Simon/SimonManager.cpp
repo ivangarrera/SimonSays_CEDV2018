@@ -61,6 +61,9 @@ void ASimonManager::BeginPlay()
 	//Get a reference to the player pawn
 	PlayerPawn = Cast<ASimonPawn>(UGameplayStatics::GetPlayerPawn(this, 0));
 	
+	// Load the JSON object
+	GetWorld()->GetAuthGameMode<ASimonGameMode>()->ReadJsonFile();
+
 	// Create the widget that is going to be displayed when the game ends.
 	if (WGameEnd)
 	{
@@ -71,6 +74,12 @@ void ASimonManager::BeginPlay()
 	if (WWinGame)
 	{
 		pWWinGame = CreateWidget<UUserWidget>(GetGameInstance(), WWinGame);
+	}
+
+	// Create the widget to see the score obtained
+	if (WScore)
+	{
+		pWScore = CreateWidget<UUserWidget>(GetGameInstance(), WScore);
 	}
 }
 
@@ -84,6 +93,8 @@ void ASimonManager::Tick(float DeltaTime)
 	//If the there are still blocks in the sequence
 	if (AccumulatedDeltaTime > ShowAnother && Counter < Sequence.Num() && !isPlaying)
 	{
+		if (Counter > 0)
+			Sequence[Counter - 1]->Deactivate();
 		Sequence[Counter]->Activate();
 		Counter++;
 
@@ -95,6 +106,10 @@ void ASimonManager::Tick(float DeltaTime)
 			RoundsCounter += 1;
 		}
 	}
+	if (AccumulatedDeltaTime > ShowAnother && Counter == Sequence.Num())
+	{
+		Sequence[Counter - 1]->Deactivate();
+	}
 
 	// If it's been a long time since you pressed a block, restart the level
 	if (AccumulatedDeltaTime >= PickAnotherBlock)
@@ -103,6 +118,18 @@ void ASimonManager::Tick(float DeltaTime)
 		{
 			pWGameEnd->AddToViewport();
 			UGameplayStatics::SetGamePaused(this, true);
+
+			// Add new punctuation if modality is Endless
+			if (GetWorld()->GetAuthGameMode<ASimonGameMode>()->bIsEndless)
+			{
+				FString Punctuation = "";
+				Punctuation.AppendInt(RoundsCounter);
+				GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordsMap.Emplace("Default", Punctuation);
+				GetWorld()->GetAuthGameMode<ASimonGameMode>()->WriteJsonFile();
+
+				// Show the score widget
+				pWScore->AddToViewport();
+			}
 		}
 	}
 
@@ -151,6 +178,18 @@ void ASimonManager::NotifyBlockClicked(ASimonBlock* Block)
 		{
 			pWGameEnd->AddToViewport();
 			UGameplayStatics::SetGamePaused(this, true);
+
+			// Add new punctuation if modality is Endless
+			if (GetWorld()->GetAuthGameMode<ASimonGameMode>()->bIsEndless)
+			{
+				FString Punctuation = "";
+				Punctuation.AppendInt(RoundsCounter);
+				GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordsMap.Emplace("Default", Punctuation);
+				GetWorld()->GetAuthGameMode<ASimonGameMode>()->WriteJsonFile();
+
+				// Show the widget
+				pWScore->AddToViewport();
+			}
 		}
 	}
 
