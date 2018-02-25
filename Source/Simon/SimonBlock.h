@@ -69,6 +69,15 @@ public:
 		class USoundBase* ActivatedSoundYellow;
 
 	UPROPERTY()
+		class USoundBase* ActivatedSoundGreenPiano;
+	UPROPERTY()
+		class USoundBase* ActivatedSoundRedPiano;
+	UPROPERTY()
+		class USoundBase* ActivatedSoundBluePiano;
+	UPROPERTY()
+		class USoundBase* ActivatedSoundYellowPiano;
+
+	UPROPERTY()
 		class UAudioComponent* ActivatedAudioComponent;
 
 	void IncreasePitch();

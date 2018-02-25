@@ -1,20 +1,12 @@
 {
 	"Records": [
 		{
-			"Name": "Ivan",
-			"Round": "10"
-		},
-		{
 			"Name": "Juanjo",
 			"Round": "13"
 		},
 		{
 			"Name": "Javi",
 			"Round": "11"
-		},
-		{
-			"Name": "Hello",
-			"Round": "10"
 		}
 	]
 }

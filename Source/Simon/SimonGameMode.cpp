@@ -92,3 +92,14 @@ float ASimonGameMode::GetVolume() const
 {
 	return Volume;
 }
+
+void ASimonGameMode::SetPianoAudio(bool piano)
+{
+	Piano = piano;
+	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Red, FString("Piano was set to: ") + (Piano ? FString("true") : FString("false")));
+}
+
+bool ASimonGameMode::GetPiano() const
+{
+	return Piano;
+}
