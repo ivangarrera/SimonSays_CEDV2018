@@ -23,8 +23,6 @@ private:
 	FString RecordsText;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
 	// Widget to show the records
 	UPROPERTY(EditAnywhere, Category = "Widgets")
@@ -35,4 +33,18 @@ public:
 
 	UPROPERTY()
 	class UTextBlock* pWRecordsText;
+
+	static TArray<TTuple<FString, FString>> RecordsScores;
+
+	void ReadJsonFile();
+
+	UFUNCTION(BlueprintCallable)
+		void WriteJsonFile();
+
+	inline static bool ConstPredicate(const TTuple<FString, FString>& ip1, const TTuple<FString, FString>& ip2)
+	{
+		int32 val1 = FCString::Atoi(*ip1.Value);
+		int32 val2 = FCString::Atoi(*ip2.Value);
+		return (val1 > val2);
+	}
 };

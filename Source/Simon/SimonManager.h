@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "SimonBlock.h"
 #include "EngineMinimal.h"
+#include "RecordManager.h"
 #include "GameFramework/Actor.h"
 #include "SimonManager.generated.h"
 
@@ -99,6 +100,10 @@ private:
 		class ASimonPawn* PlayerPawn;
 
 	ASimonBlock* GetRandomBlock() const;
+
+	// Reference to RecordManager
+	UPROPERTY()
+		TWeakObjectPtr<ARecordManager> pRecordManager;
 	
 	void RestartLevel();
 

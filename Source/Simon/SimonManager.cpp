@@ -61,9 +61,6 @@ void ASimonManager::BeginPlay()
 
 	//Get a reference to the player pawn
 	PlayerPawn = Cast<ASimonPawn>(UGameplayStatics::GetPlayerPawn(this, 0));
-	
-	// Load the JSON object
-	GetWorld()->GetAuthGameMode<ASimonGameMode>()->ReadJsonFile();
 
 	// Create the widget that is going to be displayed when the game ends.
 	if (WGameEnd)
@@ -81,6 +78,17 @@ void ASimonManager::BeginPlay()
 	if (WScore)
 	{
 		pWScore = CreateWidget<UUserWidget>(GetGameInstance(), WScore);
+	}
+
+	// Retrieve the RecordManager actor
+	for (TActorIterator<AActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+	{
+		if (ActorItr->GetName().Contains(FString("RecordManager")))
+		{
+			// Conversion to smart pointer
+			pRecordManager = Cast<ARecordManager>(*ActorItr);
+			break;
+		}
 	}
 }
 
@@ -242,8 +250,8 @@ void ASimonManager::IncreaseSpeed(double Round)
 
 void ASimonManager::AddCurrentRecord(FString Name)
 {
+	pRecordManager->ReadJsonFile();
 	FString Punctuation = "";
 	Punctuation.AppendInt(RoundsCounter);
-	GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordNames.Add(Name);
-	GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordPunctuations.Add(Punctuation);
+	pRecordManager->RecordsScores.Add(TTuple<FString, FString>(Name, Punctuation));
 }

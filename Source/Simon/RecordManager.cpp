@@ -7,12 +7,11 @@
 #include "TextBlock.h"
 #include "Engine.h"
 
+TArray<TTuple<FString, FString>> ARecordManager::RecordsScores;
 
 // Sets default values
 ARecordManager::ARecordManager()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
 	RecordsText = FString("");
 }
 
@@ -22,17 +21,16 @@ void ARecordManager::BeginPlay()
 	Super::BeginPlay();
 
 	// Load JSON data
-	GetWorld()->GetAuthGameMode<ASimonGameMode>()->ReadJsonFile();
+	ReadJsonFile();
 
-	if (GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordNames.Num() == GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordPunctuations.Num())
+	
+	for (int32 Index = 0; Index < RecordsScores.Num() && Index < 10; Index++)
 	{
-		for (int32 Index = 0; Index < GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordNames.Num(); Index++)
-		{
-			FString Name = GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordNames[Index];
-			FString Punctuation = GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordPunctuations[Index];
-			RecordsText += (Name + " : " + Punctuation + "\n");
-		}
+		FString Name = RecordsScores[Index].Key;
+		FString Punctuation = RecordsScores[Index].Value;
+		RecordsText += (Name + " : " + Punctuation + "\n");
 	}
+
 	
 	// Create the Records Widget
 	if (WRecords)
@@ -47,10 +45,76 @@ void ARecordManager::BeginPlay()
 	}
 }
 
-// Called every frame
-void ARecordManager::Tick(float DeltaTime)
+void ARecordManager::ReadJsonFile()
 {
-	Super::Tick(DeltaTime);
+	if (RecordsScores.Num() != 0)
+	{
+		return;
+	}
+	// Read Json File into TMap
+	FString FullPath = FPaths::ProjectDir() + "Content/Data/Records.json";
+	FString JsonStr;
+	FFileHelper::LoadFileToString(JsonStr, *FullPath);
+	TSharedRef<TJsonReader<TCHAR>> JsonReader = FJsonStringReader::Create(JsonStr);
 
+	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+
+	if (FJsonSerializer::Deserialize(JsonReader, JsonObject) && JsonObject.IsValid())
+	{
+		TArray<TSharedPtr<FJsonValue>> ObjArray = JsonObject->GetArrayField(TEXT("Records"));
+
+		for (int32 i = 0; i < ObjArray.Num(); i++)
+		{
+			TSharedPtr<FJsonValue> Value = ObjArray[i];
+			TSharedPtr<FJsonObject> Json = Value->AsObject();
+
+			FString Name = Json->GetStringField(TEXT("Name"));
+			FString Round = Json->GetStringField(TEXT("Round"));
+
+			// Add the values read, into corresponding arrays
+			RecordsScores.Add(TTuple<FString, FString>(Name, Round));
+		}
+	}
+}
+
+void ARecordManager::WriteJsonFile()
+{
+	// Sort the array
+	RecordsScores.Sort(ARecordManager::ConstPredicate);
+
+	// Main JSON object
+	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+
+	// JSON Array to store Records object
+	TArray<TSharedPtr<FJsonValue>> RecordsArray;
+
+	// Record object. It has the following form:
+	/*  {
+	"Name":"the_name",
+	"Round":"the_round"
+	}
+	*/
+
+	for (int32 Index = 0; Index < RecordsScores.Num(); Index++)
+	{
+		TSharedPtr<FJsonObject> JsonRecordObject = MakeShareable(new FJsonObject());
+		JsonRecordObject->SetStringField("Name", RecordsScores[Index].Key);
+		JsonRecordObject->SetStringField("Round", RecordsScores[Index].Value);
+		TSharedRef<FJsonValueObject> JsonValue = MakeShareable(new FJsonValueObject(JsonRecordObject));
+
+		// Add the Record Object to JSON Array
+		RecordsArray.Add(JsonValue);
+	}
+	
+
+	// Add the JSON Array to main JSON Object
+	JsonObject->SetArrayField("Records", RecordsArray);
+
+	// Write JSON Object to JSON file
+	FString FullPath = FPaths::ProjectDir() + "Content/Data/Records.json";
+	FString JsonStr;
+	TSharedRef< TJsonWriter<>> JsonWriter = TJsonWriterFactory<>::Create(&JsonStr);
+	FJsonSerializer::Serialize(JsonObject.ToSharedRef(), JsonWriter);
+	FFileHelper::SaveStringToFile(*JsonStr, *FullPath);
 }
 
