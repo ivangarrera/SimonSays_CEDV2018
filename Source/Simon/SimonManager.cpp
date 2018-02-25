@@ -240,5 +240,6 @@ void ASimonManager::AddCurrentRecord(FString Name)
 {
 	FString Punctuation = "";
 	Punctuation.AppendInt(RoundsCounter);
-	GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordsMap.Emplace(Name, Punctuation);
+	GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordNames.Add(Name);
+	GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordPunctuations.Add(Punctuation);
 }
