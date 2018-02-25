@@ -26,16 +26,19 @@ void ASimonGameMode::ReadJsonFile()
 	
 	if (FJsonSerializer::Deserialize(JsonReader, JsonObject) && JsonObject.IsValid())
 	{
-		TArray<TSharedPtr<FJsonValue>> objArray = JsonObject->GetArrayField(TEXT("Records"));
+		TArray<TSharedPtr<FJsonValue>> ObjArray = JsonObject->GetArrayField(TEXT("Records"));
 		
-		for (int32 i = 0; i < objArray.Num(); i++)
+		for (int32 i = 0; i < ObjArray.Num(); i++)
 		{
-			TSharedPtr<FJsonValue> value = objArray[i];
-			TSharedPtr<FJsonObject> json = value->AsObject();
+			TSharedPtr<FJsonValue> Value = ObjArray[i];
+			TSharedPtr<FJsonObject> Json = Value->AsObject();
       
-			FString name = json->GetStringField(TEXT("Name"));
-			FString round = json->GetStringField(TEXT("Round"));
-			RecordsMap.Emplace(name, round);
+			FString Name = Json->GetStringField(TEXT("Name"));
+			FString Round = Json->GetStringField(TEXT("Round"));
+
+			// Add the values readed, into corresponding arrays
+			RecordNames.Add(Name);
+			RecordPunctuations.Add(Round);
 		}
 	}
 }
@@ -51,20 +54,24 @@ void ASimonGameMode::WriteJsonFile()
 	// Record object. It has the following form:
 	/*  {
 			"Name":"the_name",
-			"Round":"th_round"
+			"Round":"the_round"
 		}
 	*/
-	TSharedPtr<FJsonObject> JsonRecordObject = MakeShareable(new FJsonObject());
 	
-	for (auto& Elem : RecordsMap)
+	if (RecordNames.Num() == RecordPunctuations.Num())
 	{
-		JsonRecordObject->SetStringField("Name", Elem.Key);
-		JsonRecordObject->SetStringField("Round", *Elem.Value);
-		TSharedRef<FJsonValueObject> JsonValue = MakeShareable(new FJsonValueObject(JsonRecordObject));
+		for (int32 Index = 0; Index < RecordNames.Num(); Index++)
+		{
+			TSharedPtr<FJsonObject> JsonRecordObject = MakeShareable(new FJsonObject());
+			JsonRecordObject->SetStringField("Name", RecordNames[Index]);
+			JsonRecordObject->SetStringField("Round", RecordPunctuations[Index]);
+			TSharedRef<FJsonValueObject> JsonValue = MakeShareable(new FJsonValueObject(JsonRecordObject));
 
-		// Add the Record Object to JSON Array
-		RecordsArray.Add(JsonValue);
+			// Add the Record Object to JSON Array
+			RecordsArray.Add(JsonValue);
+		}
 	}
+	
 	// Add the JSON Array to main JSON Object
 	JsonObject->SetArrayField("Records", RecordsArray);
 

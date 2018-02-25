@@ -3,6 +3,8 @@
 #include "RecordManager.h"
 #include "SimonGameMode.h"
 #include "Blueprint/UserWidget.h"
+#include "TextWidgetTypes.h"
+#include "TextBlock.h"
 #include "Engine.h"
 
 
@@ -11,7 +13,7 @@ ARecordManager::ARecordManager()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	RecordsText = FString("");
 }
 
 // Called when the game starts or when spawned
@@ -21,17 +23,17 @@ void ARecordManager::BeginPlay()
 
 	// Load JSON data
 	GetWorld()->GetAuthGameMode<ASimonGameMode>()->ReadJsonFile();
-	int i = 0;
 
-	for (auto& Elem : GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordsMap)
+	if (GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordNames.Num() == GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordPunctuations.Num())
 	{
-		FString Name = Elem.Key;
-		FString Rec = *Elem.Value;
-		GEngine->AddOnScreenDebugMessage(i, 2.f, FColor::Yellow, Name);
-		GEngine->AddOnScreenDebugMessage(i+1, 2.f, FColor::Yellow, Rec);
-		i += 2;
+		for (int32 Index = 0; Index < GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordNames.Num(); Index++)
+		{
+			FString Name = GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordNames[Index];
+			FString Punctuation = GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordPunctuations[Index];
+			RecordsText += (Name + " : " + Punctuation + "\n");
+		}
 	}
-
+	
 	// Create the Records Widget
 	if (WRecords)
 	{
@@ -39,6 +41,8 @@ void ARecordManager::BeginPlay()
 		if (pWRecords)
 		{
 			pWRecords->AddToViewport();
+			pWRecordsText = (UTextBlock*)pWRecords->GetWidgetFromName("RecordText");
+			pWRecordsText->SetText(FText::FromString(RecordsText));
 		}
 	}
 }

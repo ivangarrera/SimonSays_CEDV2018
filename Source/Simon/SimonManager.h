@@ -32,6 +32,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void GameModeIsReady();
 
+	// This function will add the current record to the RecordsMap
+	UFUNCTION(BlueprintCallable)
+	void AddCurrentRecord(FString Name);
+
 	// Widget to show when the game ends
 	UPROPERTY(EditAnywhere, Category = "Widgets")
 		TSubclassOf<class UUserWidget> WGameEnd;
