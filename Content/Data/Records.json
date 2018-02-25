@@ -1,20 +1,12 @@
 {
 	"Records": [
 		{
-			"Name": "Fulgencio",
-			"Round": "3"
-		},
-		{
-			"Name": "Ivan",
-			"Round": "6"
-		},
-		{
 			"Name": "Juanjo",
-			"Round": "7"
+			"Round": "13"
 		},
 		{
 			"Name": "Javi",
-			"Round": "8"
+			"Round": "11"
 		}
 	]
 }

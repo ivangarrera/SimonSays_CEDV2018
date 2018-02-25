@@ -28,7 +28,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameMode")
 	bool bIsEndless;
 
-	TMap<FString, FString> RecordsMap;
+	UPROPERTY()
+	TArray<FString> RecordNames;
+	
+	UPROPERTY()
+	TArray<FString> RecordPunctuations;
 
 	void ReadJsonFile();
   
@@ -36,10 +40,18 @@ public:
 	void WriteJsonFile();
 
 	UFUNCTION(BlueprintCallable)
-	void SetVolume(float volume);
+		void SetVolume(float volume);
 
-	float GetVolume() const;
+	UFUNCTION(BlueprintCallable)
+		void SetPianoAudio(bool piano);
+
+	UFUNCTION(BlueprintCallable)
+		float GetVolume() const;
+
+	UFUNCTION(BlueprintCallable)
+		bool GetPiano() const;
 };
 
 static float Volume = 0.75;
 
+static bool Piano = false;

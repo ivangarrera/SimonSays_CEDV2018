@@ -94,9 +94,7 @@ private:
 	// and you must enter the sequence faster, too.
 	int NumberOfBlocksToGoFaster;
 
-	// Amount of time in which ShowAnother and PickAnotherBlock will decrease
-	float AmmountOfTimeToDecrease;
-
+	// Reference to the player pawn
 	UPROPERTY()
 		class ASimonPawn* PlayerPawn;
 
@@ -104,5 +102,5 @@ private:
 	
 	void RestartLevel();
 
-	void IncreaseSpeed();
+	void IncreaseSpeed(double Round);
 };

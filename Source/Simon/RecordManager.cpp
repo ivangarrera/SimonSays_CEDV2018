@@ -24,13 +24,16 @@ void ARecordManager::BeginPlay()
 	// Load JSON data
 	GetWorld()->GetAuthGameMode<ASimonGameMode>()->ReadJsonFile();
 
-	for (auto& Elem : GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordsMap)
+	if (GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordNames.Num() == GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordPunctuations.Num())
 	{
-		FString Name = Elem.Key;
-		FString Rec = *Elem.Value;
-		RecordsText += (Name + " : " + Rec + "\n");
+		for (int32 Index = 0; Index < GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordNames.Num(); Index++)
+		{
+			FString Name = GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordNames[Index];
+			FString Punctuation = GetWorld()->GetAuthGameMode<ASimonGameMode>()->RecordPunctuations[Index];
+			RecordsText += (Name + " : " + Punctuation + "\n");
+		}
 	}
-
+	
 	// Create the Records Widget
 	if (WRecords)
 	{
