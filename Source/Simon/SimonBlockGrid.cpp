@@ -48,7 +48,7 @@ void ASimonBlockGrid::BeginPlay()
 		// Tell the block about its owner
 		if (NewBlock != nullptr)
 		{
-			NewBlock->OwningGrid = this;
+			//NewBlock->OwningGrid = this;
 		}
 	}
 }

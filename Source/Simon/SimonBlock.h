@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine.h"
 #include "GameFramework/Actor.h"
 #include "SimonBlock.generated.h"
 
@@ -17,8 +18,8 @@ class ASimonBlock : public AActor
 	class USceneComponent* DummyRoot;
 
 	/** StaticMesh component for the clickable block */
-	UPROPERTY(Category = Block, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* BlockMesh;
+	UPROPERTY()
+		TWeakObjectPtr<UStaticMeshComponent> BlockMesh;
 
 public:
 	ASimonBlock();
@@ -26,39 +27,65 @@ public:
 	/** Are we currently active? */
 	bool bIsActive;
 
-	/** Pointer to white material used on the focused block */
+	/** String to know in an efficient way which is my color*/
+	FString Color;
+
+	/** Pointer to the different meshes before we know which one is the right one*/
 	UPROPERTY()
-	class UMaterial* BaseMaterial;
-
-	/** Pointer to blue material used on inactive blocks */
+		class UStaticMesh* GreenMesh;
 	UPROPERTY()
-	class UMaterialInstance* BlueMaterial;
-
-	/** Pointer to orange material used on active blocks */
+		class UStaticMesh* RedMesh;
 	UPROPERTY()
-	class UMaterialInstance* OrangeMaterial;
-
-	/** Grid that owns us */
+		class UStaticMesh* BlueMesh;
 	UPROPERTY()
-	class ASimonBlockGrid* OwningGrid;
+		class UStaticMesh* YellowMesh;
 
-	/** Handle the block being clicked */
-	UFUNCTION()
-	void BlockClicked(UPrimitiveComponent* ClickedComp, FKey ButtonClicked);
+	UPROPERTY()
+		class UMaterial* GreenMaterial;
+	UPROPERTY()
+		class UMaterial* RedMaterial;
+	UPROPERTY()
+		class UMaterial* BlueMaterial;
+	UPROPERTY()
+		class UMaterial* YellowMaterial;
 
-	/** Handle the block being touched  */
-	UFUNCTION()
-	void OnFingerPressedBlock(ETouchIndex::Type FingerIndex, UPrimitiveComponent* TouchedComponent);
+	UPROPERTY()
+		class UMaterial* GreenHighlightMaterial;
+	UPROPERTY()
+		class UMaterial* RedHighlightMaterial;
+	UPROPERTY()
+		class UMaterial* BlueHighlightMaterial;
+	UPROPERTY()
+		class UMaterial* YellowHighlightMaterial;
 
-	void HandleClicked();
+	/** Audio variables: SoundCue and AudioComponent*/
+	UPROPERTY()
+		class USoundBase* ActivatedSoundGreen;
+	UPROPERTY()
+		class USoundBase* ActivatedSoundRed;
+	UPROPERTY()
+		class USoundBase* ActivatedSoundBlue;
+	UPROPERTY()
+		class USoundBase* ActivatedSoundYellow;
 
-	void Highlight(bool bOn);
+	UPROPERTY()
+		class UAudioComponent* ActivatedAudioComponent;
 
-public:
-	/** Returns DummyRoot subobject **/
-	FORCEINLINE class USceneComponent* GetDummyRoot() const { return DummyRoot; }
-	/** Returns BlockMesh subobject **/
-	FORCEINLINE class UStaticMeshComponent* GetBlockMesh() const { return BlockMesh; }
+	void IncreasePitch();
+
+	void Activate() const;
+	void Activate(bool bHighlight) const;
+	void Deactivate() const;
+
+	void Highlight(bool bHighlight) const;
+
+	void OnMouseHover(bool bHovered) const;
+
+	void SetMaterial(FString Color);
+
+private:
+	// Variable for controlling the pitch of the sound.
+	float pitch;
 };
 
 
