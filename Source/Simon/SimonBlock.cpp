@@ -134,13 +134,12 @@ void ASimonBlock::SetMaterial(FString Color)
 		}
 	}
 
+	ActivatedAudioComponent->SetVolumeMultiplier(GetWorld()->GetAuthGameMode<ASimonGameMode>()->GetVolume());
 	this->Color = Color;
 }
 
 void ASimonBlock::Activate() const
 {
-	float volume = GetWorld()->GetAuthGameMode<ASimonGameMode>()->GetVolume();
-	ActivatedAudioComponent->SetVolumeMultiplier(volume);
 	ActivatedAudioComponent->Play();
 	Highlight(true);
 }
