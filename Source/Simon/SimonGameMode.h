@@ -40,8 +40,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void SetPianoAudio(bool piano);
 
-	float GetVolume() const;
-	bool GetPiano() const;
+	UFUNCTION(BlueprintCallable)
+		float GetVolume() const;
+
+	UFUNCTION(BlueprintCallable)
+		bool GetPiano() const;
 };
 
 static float Volume = 0.75;
