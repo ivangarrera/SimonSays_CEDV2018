@@ -59,6 +59,8 @@ public:
 		TSubclassOf<class UUserWidget> WScore;
 	UPROPERTY()
 		class UUserWidget* pWScore;
+
+	bool isPlaying;
 	
 private:
 	// Array to keep the reference of the 4 blocks
@@ -77,8 +79,6 @@ private:
 
 	// Ammount of time the user has to pick another block
 	float PickAnotherBlock;
-
-	bool isPlaying;
 
 	// Number of rounds the game has
 	int NumberOfRounds;
