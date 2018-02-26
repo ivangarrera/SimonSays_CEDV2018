@@ -6,6 +6,8 @@
 #include "SimonGameMode.h"
 #include "Engine.h"
 #include "Blueprint/UserWidget.h"
+#include "TextWidgetTypes.h"
+#include "TextBlock.h"
 #include "Engine/World.h"
 
 
@@ -80,6 +82,20 @@ void ASimonManager::BeginPlay()
 		pWScore = CreateWidget<UUserWidget>(GetGameInstance(), WScore);
 	}
 
+	// Create the widget to see the score in game
+	if (WScoreInGame)
+	{
+		pWScoreInGame = CreateWidget<UUserWidget>(GetGameInstance(), WScoreInGame);
+
+		//Get references to the texts that need to change
+		if (pWScoreInGame)
+		{
+			pRoundText = (UTextBlock*)pWScoreInGame->GetWidgetFromName("txtRound");
+			pTurnText = (UTextBlock*)pWScoreInGame->GetWidgetFromName("txtTurn");
+			pWScoreInGame->AddToViewport();
+		}
+	}
+
 	// Retrieve the RecordManager actor
 	for (TActorIterator<AActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
 	{
@@ -99,7 +115,7 @@ void ASimonManager::Tick(float DeltaTime)
 
 	AccumulatedDeltaTime += DeltaTime;
 
-	//If the there are still blocks in the sequence
+	// If the there are still blocks in the sequence
 	if (AccumulatedDeltaTime > ShowAnother && Counter < Sequence.Num() && !isPlaying)
 	{
 		if (Counter > 0)
@@ -112,9 +128,11 @@ void ASimonManager::Tick(float DeltaTime)
 		if (Counter == Sequence.Num())
 		{
 			isPlaying = true;
+			pTurnText->SetText(FText::FromString(FString("You!")));
 			RoundsCounter += 1;
 		}
 	}
+	// Deactivate the last block
 	if (AccumulatedDeltaTime > ShowAnother && Counter == Sequence.Num())
 	{
 		Sequence[Counter - 1]->Deactivate();
@@ -142,6 +160,10 @@ void ASimonManager::Tick(float DeltaTime)
 		&& RoundsCounter <= NumberOfRounds)
 	{
 		Sequence.Add(GetRandomBlock());
+
+		// Notify the player the new number of rounds
+		pRoundText->SetText(FText::FromString(FString::FromInt(Sequence.Num())));
+
 		Counter = 0;
 	}
 
@@ -201,7 +223,11 @@ void ASimonManager::NotifyBlockClicked(ASimonBlock* Block)
 		}
 
 		IndexCurrentBlock = 0;
+
+		//Set the turn to the player
 		isPlaying = false;
+		pTurnText->SetText(FText::FromString(FString("CPU")));
+
 		AccumulatedDeltaTime = 0.f;
 	}
 	
