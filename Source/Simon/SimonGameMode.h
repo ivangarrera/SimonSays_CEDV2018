@@ -24,9 +24,15 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameMode")
 	bool bIsHard;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameMode")
 	bool bIsEndless;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameMode")
+	bool bIsColorBlind;
+
+	UFUNCTION(BlueprintCallable)
+		void SetColorBlind(bool IsColorblind);
 
 	UFUNCTION(BlueprintCallable)
 		void SetVolume(float volume);

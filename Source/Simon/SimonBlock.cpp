@@ -33,6 +33,9 @@ ASimonBlock::ASimonBlock() : bIsActive(false), pitch(1.0f)
 	auto BMaterial = ConstructorHelpers::FObjectFinder<UMaterial>(TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialBlue.SimonBlock_MaterialBlue'"));
 	auto YMaterial = ConstructorHelpers::FObjectFinder<UMaterial>(TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialYellow.SimonBlock_MaterialYellow'"));
 
+	auto GCBMaterial = ConstructorHelpers::FObjectFinder<UMaterial>(TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialGreen_CB.SimonBlock_MaterialGreen_CB'"));
+	auto YCBMaterial = ConstructorHelpers::FObjectFinder<UMaterial>(TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialYellow_CB.SimonBlock_MaterialYellow_CB'"));
+
 	auto GHMaterial = ConstructorHelpers::FObjectFinder<UMaterial>(TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialGreen_Highlighted.SimonBlock_MaterialGreen_Highlighted'"));
 	auto RHMaterial = ConstructorHelpers::FObjectFinder<UMaterial>(TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialRed_Highlighted.SimonBlock_MaterialRed_Highlighted'"));
 	auto BHMaterial = ConstructorHelpers::FObjectFinder<UMaterial>(TEXT("Material'/Game/Models/Mesh/SimonBlock/SimonBlock_MaterialBlue_Highlighted.SimonBlock_MaterialBlue_Highlighted'"));
@@ -74,13 +77,21 @@ ASimonBlock::ASimonBlock() : bIsActive(false), pitch(1.0f)
 	BlueMaterial = BMaterial.Object;
 	YellowMaterial = YMaterial.Object;
 
+	GreenCBMaterial = GCBMaterial.Object;
+	YellowCBMaterial = YCBMaterial.Object;
+
 	ActivatedAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("ActivatedAudioComponent"));
 
 }
 
 
-void ASimonBlock::SetMaterial(FString Color)
+void ASimonBlock::SetMaterial(FString Color, bool IsColorblind)
 {
+	if (IsColorblind)
+	{
+		GreenMaterial = GreenCBMaterial;
+		YellowMaterial = YellowMaterial;
+	}
 	if (Color.Equals("GREEN"))
 	{
 		// The material to set is Green

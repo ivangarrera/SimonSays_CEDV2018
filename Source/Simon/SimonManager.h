@@ -104,6 +104,9 @@ private:
 	// and you must enter the sequence faster, too.
 	int NumberOfBlocksToGoFaster;
 
+	// Store the state in a variable so we do not have to store the GameMode
+	bool bIsColorBlind;
+
 	// Reference to the player pawn
 	UPROPERTY()
 		class ASimonPawn* PlayerPawn;

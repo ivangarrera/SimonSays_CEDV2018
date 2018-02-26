@@ -40,6 +40,7 @@ public:
 	UPROPERTY()
 		class UStaticMesh* YellowMesh;
 
+	/* Different base materials for the blocks*/
 	UPROPERTY()
 		class UMaterial* GreenMaterial;
 	UPROPERTY()
@@ -49,6 +50,13 @@ public:
 	UPROPERTY()
 		class UMaterial* YellowMaterial;
 
+	/* Colorblind mode materials*/
+	UPROPERTY()
+		class UMaterial* GreenCBMaterial;
+	UPROPERTY()
+		class UMaterial* YellowCBMaterial;
+
+	/* Different highlight materials*/
 	UPROPERTY()
 		class UMaterial* GreenHighlightMaterial;
 	UPROPERTY()
@@ -90,7 +98,7 @@ public:
 
 	void OnMouseHover(bool bHovered) const;
 
-	void SetMaterial(FString Color);
+	void SetMaterial(FString Color, bool IsColorblind);
 
 private:
 	// Variable for controlling the pitch of the sound.
