@@ -80,6 +80,10 @@ void ASimonManager::BeginPlay()
 	if (WScore)
 	{
 		pWScore = CreateWidget<UUserWidget>(GetGameInstance(), WScore);
+		if (pWScore)
+		{
+			pScoreText = (UTextBlock*)pWScore->GetWidgetFromName("YourPunctuation");
+		}
 	}
 
 	// Create the widget to see the score in game
@@ -151,6 +155,7 @@ void ASimonManager::Tick(float DeltaTime)
 			{
 				// Show the score widget
 				pWScore->AddToViewport();
+				pScoreText->SetText(FText::FromString(FString::FromInt(RoundsCounter)));
 			}
 		}
 	}
@@ -210,6 +215,7 @@ void ASimonManager::NotifyBlockClicked(ASimonBlock* Block)
 			{
 				// Show the widget
 				pWScore->AddToViewport();
+				pScoreText->SetText(FText::FromString(FString::FromInt(RoundsCounter)));
 			}
 		}
 	}

@@ -60,6 +60,7 @@ public:
 		TSubclassOf<class UUserWidget> WScore;
 	UPROPERTY()
 		class UUserWidget* pWScore;
+	TWeakObjectPtr<class UTextBlock> pScoreText;
 
 	// Widget to see the score in game
 	UPROPERTY(EditAnywhere, Category = "Widgets")
