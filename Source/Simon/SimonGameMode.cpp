@@ -36,5 +36,10 @@ bool ASimonGameMode::GetPiano() const
 
 void ASimonGameMode::SetColorBlind(bool IsColorblind)
 {
-	bIsColorBlind = IsColorblind;
+	ColorBlind = IsColorblind;
+}
+
+bool ASimonGameMode::GetColorBlind() const
+{
+	return ColorBlind;
 }

@@ -87,11 +87,6 @@ ASimonBlock::ASimonBlock() : bIsActive(false), pitch(1.0f)
 
 void ASimonBlock::SetMaterial(FString Color, bool IsColorblind)
 {
-	if (IsColorblind)
-	{
-		GreenMaterial = GreenCBMaterial;
-		YellowMaterial = YellowMaterial;
-	}
 	if (Color.Equals("GREEN"))
 	{
 		// The material to set is Green
@@ -142,6 +137,22 @@ void ASimonBlock::SetMaterial(FString Color, bool IsColorblind)
 		else
 		{
 			ActivatedAudioComponent->SetSound(ActivatedSoundYellow);
+		}
+	}
+
+	if (IsColorblind)
+	{
+		GreenMaterial = GreenCBMaterial;
+		YellowMaterial = YellowMaterial;
+		if (Color.Equals("GREEN"))
+		{
+			auto GDynamicMaterial = UMaterialInstanceDynamic::Create(GreenMaterial, BlockMesh.Get());
+			BlockMesh->SetMaterial(0, GDynamicMaterial);
+		}
+		else if (Color.Equals("YELLOW"))
+		{
+			auto GDynamicMaterial = UMaterialInstanceDynamic::Create(YellowMaterial, BlockMesh.Get());
+			BlockMesh->SetMaterial(0, GDynamicMaterial);
 		}
 	}
 
