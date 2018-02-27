@@ -24,9 +24,12 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameMode")
 	bool bIsHard;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameMode")
 	bool bIsEndless;
+
+	UFUNCTION(BlueprintCallable)
+		void SetColorBlind(bool IsColorblind);
 
 	UFUNCTION(BlueprintCallable)
 		void SetVolume(float volume);
@@ -39,8 +42,13 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		bool GetPiano() const;
+
+	UFUNCTION(BlueprintCallable)
+		bool GetColorBlind() const;
 };
 
 static float Volume = 0.75;
 
 static bool Piano = false;
+
+static bool ColorBlind = false;

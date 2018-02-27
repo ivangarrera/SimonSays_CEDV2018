@@ -40,6 +40,9 @@ void ASimonManager::BeginPlay()
 			UGameplayStatics::SetGamePaused(this, true);
 		}
 	}
+
+	// Get the colorblind current value
+	bIsColorBlind = GetWorld()->GetAuthGameMode<ASimonGameMode>()->GetColorBlind();
 	
 	FVector Location(0.0f, 0.0f, 20.0f);
 	FRotator Rotation(0.0f, 0.0f, 0.0f);
@@ -53,7 +56,7 @@ void ASimonManager::BeginPlay()
 
 		if (NewBlock != nullptr)
 		{
-			NewBlock->SetMaterial(color);
+			NewBlock->SetMaterial(color, bIsColorBlind);
 		}
 
 		Blocks.Add(NewBlock);
