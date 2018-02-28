@@ -99,7 +99,7 @@ El juego ha sido realizado por:
 
 En primer lugar, vamos a analizar el juego.
 
-Los bloques del juego principal, se encuentran en la clase \texttt{SimonBlock}. Esta clase es la encargada de establecer el color adecuado al bloque de juego, brillar en los casos adecuados y emitir sonido, gestionar los colores de realzado cuando el ratón se posa sobre el bloque, establecer el sonido que cada bloque tendrá y el comportamiento de los bloques cuando son presionados.
+Los bloques del juego principal, se encuentran en la clase \texttt{SimonBlock}. Esta clase es la encargada de establecer el color adecuado al bloque de juego, brillar en los casos adecuados y emitir sonido, gestionar los colores de realzado cuando el ratón se posa sobre el bloque, establecer el sonido que cada bloque tendrá y el comportamiento de los bloques cuando son presionados. Puesto que no podemos construir un bloque sabiendo ya su color, Se construye en un principio sin ningún material, hasta que el \texttt{SimonManager} le notifica su color, y entonces le adjudicamos tanto su color como sonido. Esto se realiza en la función \texttt{SetMaterial}, que es invocada en el  \texttt{BeginPlay()} del  \texttt{SimonManager}.
 
 \vspace*{0.15in}
 
@@ -122,7 +122,7 @@ $ f(Round) = 1 - \cfrac{\log(Round)}{\log(60)}$
 \end{center}
 \vspace*{0.15in}
 
-La clase \texttt{SimonPawn} es la encargada de notificar a \texttt{SimonManager} que se ha presionado un bloque (y cuál es exactamente el bloque presionado).
+La clase \texttt{SimonPawn} es la encargada de notificar a \texttt{SimonManager} que se ha presionado un bloque (y cuál es exactamente el bloque presionado). También es la encargada de notificar al bloque si debe brillar en el caso de que el jugador tenga el puntero del ratón sobre dicho bloque (esto sólo ocurre si es el turno del jugador).
 
 \vspace*{0.15in}
 
@@ -146,6 +146,12 @@ Por último cabe destacar el uso de la clase \texttt{SimonGameMode}. Hemos decid
 \item Elegir entre los dos sonidos existentes para las pulsaciones en los bloques.
 \item Establecer el volumen de juego.
 \end{itemize}
+
+Todas estas opciones están almacenadas en variables estáticas, puesto que la instancia de la clase es diferente en cada level diferente.
+
+Para finalizar esta sección, adjuntamos el diagrama de clases del proyecto.
+
+\includegraphics[width=15cm]{./images/ClassDiagram.jpg}
 \section{Proyecto.}
 
 \textsl{https://www.mega.nz}
@@ -153,5 +159,8 @@ Por último cabe destacar el uso de la clase \texttt{SimonGameMode}. Hemos decid
 \section{Vídeo.}
 
 \textsl{https://www.youtube.com}
+
+\section{Otra Información}
+El funcionamiento del juego se controla desde el menú principal. Desde aquí se puede acceder a cualquiera de las otras pantallas del juego(todas ellas en levels diferentes). Cabe destacar que la funcionalidad de récords sólo está disponible en el modo de juego  \texttt{Endless}, puesto que no tiene sentido la inclusión de récords en un modo de juego con un final.
 
 \end{document}
