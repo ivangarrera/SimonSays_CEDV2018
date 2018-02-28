@@ -37,22 +37,10 @@ void ASimonPawn::Tick(float DeltaSeconds)
 
 	if (APlayerController* PC = Cast<APlayerController>(GetController()))
 	{
-		if (UHeadMountedDisplayFunctionLibrary::IsHeadMountedDisplayEnabled())
-		{
-			if (UCameraComponent* OurCamera = PC->GetViewTarget()->FindComponentByClass<UCameraComponent>())
-			{
-				FVector Start = OurCamera->GetComponentLocation();
-				FVector End = Start + (OurCamera->GetComponentRotation().Vector() * 8000.0f);
-				TraceForBlock(Start, End, true);
-			}
-		}
-		else
-		{
-			FVector Start, Dir, End;
-			PC->DeprojectMousePositionToWorld(Start, Dir);
-			End = Start + (Dir * 8000.0f);
-			TraceForBlock(Start, End, false);
-		}
+		FVector Start, Dir, End;
+		PC->DeprojectMousePositionToWorld(Start, Dir);
+		End = Start + (Dir * 8000.0f);
+		TraceForBlock(Start, End);
 	}
 }
 
@@ -60,7 +48,6 @@ void ASimonPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAction("OnResetVR", EInputEvent::IE_Pressed, this, &ASimonPawn::OnResetVR);
 	PlayerInputComponent->BindAction("TriggerClick", EInputEvent::IE_Pressed, this, &ASimonPawn::TriggerClick);
 }
 
@@ -69,11 +56,6 @@ void ASimonPawn::CalcCamera(float DeltaTime, struct FMinimalViewInfo& OutResult)
 	Super::CalcCamera(DeltaTime, OutResult);
 
 	OutResult.Rotation = FRotator(-90.0f, -90.0f, 0.0f);
-}
-
-void ASimonPawn::OnResetVR()
-{
-	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
 }
 
 void ASimonPawn::TriggerClick()
@@ -88,15 +70,10 @@ void ASimonPawn::TriggerClick()
 	}
 }
 
-void ASimonPawn::TraceForBlock(const FVector& Start, const FVector& End, bool bDrawDebugHelpers)
+void ASimonPawn::TraceForBlock(const FVector& Start, const FVector& End)
 {
 	FHitResult HitResult;
 	GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility);
-	if (bDrawDebugHelpers)
-	{
-		DrawDebugLine(GetWorld(), Start, HitResult.Location, FColor::Red);
-		DrawDebugSolidBox(GetWorld(), HitResult.Location, FVector(20.0f), FColor::Red);
-	}
 	if (HitResult.Actor.IsValid())
 	{
 		ASimonBlock* HitBlock = Cast<ASimonBlock>(HitResult.Actor.Get());

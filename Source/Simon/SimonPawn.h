@@ -22,9 +22,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	void OnResetVR();
 	void TriggerClick();
-	void TraceForBlock(const FVector& Start, const FVector& End, bool bDrawDebugHelpers);
+	void TraceForBlock(const FVector& Start, const FVector& End);
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite)
 		class ASimonBlock* CurrentBlockFocus;

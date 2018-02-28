@@ -18,7 +18,7 @@ public:
 	// Sets default values for this actor's properties
 	ASimonManager();
 
-	TArray<FString> colors;
+	TArray<FString> Colors;
 
 protected:
 	// Called when the game starts or when spawned

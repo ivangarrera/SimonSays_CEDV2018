@@ -18,10 +18,10 @@ ASimonManager::ASimonManager() : AccumulatedDeltaTime(0.0f), ShowAnother(1.f), P
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	colors.Add(TEXT("RED"));
-	colors.Add(TEXT("GREEN"));
-	colors.Add(TEXT("BLUE"));
-	colors.Add(TEXT("YELLOW"));
+	Colors.Add(TEXT("RED"));
+	Colors.Add(TEXT("GREEN"));
+	Colors.Add(TEXT("BLUE"));
+	Colors.Add(TEXT("YELLOW"));
 
 }
 
@@ -48,7 +48,7 @@ void ASimonManager::BeginPlay()
 	FRotator Rotation(0.0f, 0.0f, 0.0f);
 	FVector Scale(175.f, 175.f, 1.f);
 
-	for (auto color : colors)
+	for (auto color : Colors)
 	{
 
 		FTransform transform(Rotation, Location, Scale);
