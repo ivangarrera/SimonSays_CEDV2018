@@ -11,7 +11,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[spanish,activeacute]{babel}
 \usepackage[utf8]{inputenc} % Para poder incluir tildes y ñ automáticamente
-
+\usepackage{amsmath}
 
 % Margins
 \topmargin=-0.45in
@@ -85,7 +85,73 @@ Fecha: 28 de Febrero de 2018.\\
 % cuerpo del documento
 \newpage
 
-\section{}
+\section{Autores.}
 
+El juego ha sido realizado por:
+
+\begin{itemize}
+\item Javier Córdoba Romero
+\item Juan José Corroto Martín
+\item Iván García Herrera
+\end{itemize}
+
+\section{Diseño de la solución.}
+
+En primer lugar, vamos a analizar el juego.
+
+Los bloques del juego principal, se encuentran en la clase \texttt{SimonBlock}. Esta clase es la encargada de establecer el color adecuado al bloque de juego, brillar en los casos adecuados y emitir sonido, gestionar los colores de realzado cuando el ratón se posa sobre el bloque, establecer el sonido que cada bloque tendrá y el comportamiento de los bloques cuando son presionados.
+
+\vspace*{0.15in}
+
+Los bloques del juego, independientes entre sí, son gestionados en su conjunto por la clase \texttt{SimonManager}. Esta clase es la encargada de crear la secuencia de juego, almacenarla y después, comprobar que la secuencia que el usuario está introduciendo es correcta. Posee un método \texttt{NotifyBlockClicked}, que es invocado cuando se presiona un bloque. Aquí se comprueba que el \textit{click} se corresponde con el bloque correspondiente en la secuencia de juego. También se comprueba el número de ronda y, \textbf{cada cuatro rondas} se incrementa la velocidad de juego. Si el bloque que se ha presionado no se corresponde con el esperado, se muestra
+la pantalla de error y se acaba el juego. 
+
+Esta clase además gestiona la longitud de la secuencia que se generará, en función de la dificultad de juego. Existen cuatro modos de juego en función de la dificultad:
+
+\begin{itemize}
+\item \textbf{Fácil}. El número de elementos que contendrá la secuencia será 6. Si se aciertan 6 rondas, el juego se acaba y se muestra un mensaje de victoria.
+\item \textbf{Medio}. El número de elementos que contendrá la secuencia será 10. Si se aciertan 10 rondas, el juego se acaba y se muestra un mensaje de victoria.
+\item \textbf{Difícil}. El número de elementos que contendrá la secuencia será 16. Si se aciertan 16 rondas, el juego se acaba y se muestra un mensaje de victoria.
+\item \textbf{Sin fin}. Aquí no hay un número de rondas máximo. La secuencia contendrá tantos elementos como aquellos que el jugador sea capaz de recordar. 
+\end{itemize}
+
+Hay que destacar que debido a que usamos una función logarítmica para incrementar la velocidad en los bloques, si que llega un momento en el que el juego se acabaría (en nuestro caso, ronda 60 ya que $1 - \frac{log(60)}{log(60)} = 1 - 1 = 0$).
+
+\begin{center}
+$ f(Round) = 1 - \cfrac{\log(Round)}{\log(60)}$ 
+\end{center}
+\vspace*{0.15in}
+
+La clase \texttt{SimonPawn} es la encargada de notificar a \texttt{SimonManager} que se ha presionado un bloque (y cuál es exactamente el bloque presionado).
+
+\vspace*{0.15in}
+
+Ahora, vamos a analizar los récords.
+
+La clase que gestiona los récords es \texttt{RecordManager}. Para el diseño de los récords hemos decidido almacenarlos en un \texttt{JSON}, para agregar persistencia. Esta clase se encarga de leer el fichero \texttt{JSON} y cargar los datos en una estructura interna del tipo:
+
+\begin{lstlisting}[language=C++]
+TArray<TTuple<Fstring, FString>>
+\end{lstlisting}
+
+Hemos decidido este tipo de estructura debido a que el \texttt{JSON} tiene un formato \textit{``Name'':``Value''}. La clase \texttt{RecordManager} posee un método usado para ordenar el vector de puntuaciones en formato decreciente de puntuación. Además, también muestra en la pantalla el \texttt{Widget} correspondiente con los récords.
+
+\vspace*{0.15in}
+
+Por último cabe destacar el uso de la clase \texttt{SimonGameMode}. Hemos decidido que esta clase es la indicada para escoger las opciones de juego:
+
+\begin{itemize}
+\item Elegir la dificultad en la que se quiere jugar.
+\item Hacer uso o no del modo para daltónicos.
+\item Elegir entre los dos sonidos existentes para las pulsaciones en los bloques.
+\item Establecer el volumen de juego.
+\end{itemize}
+\section{Proyecto.}
+
+\textsl{https://www.mega.nz}
+
+\section{Vídeo.}
+
+\textsl{https://www.youtube.com}
 
 \end{document}
