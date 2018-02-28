@@ -3,3 +3,11 @@
 .Intermediate/*
 
 .Saved/*
+
+.Plugins/CWButton/Binaries/*
+
+.Plugins/CWButton/Intermediate/*
+
+.Content/StarterContent/*
+
+*.sln
