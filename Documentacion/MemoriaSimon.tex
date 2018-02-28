@@ -1,0 +1,91 @@
+\documentclass{article}
+
+\usepackage{fancyhdr} % Required for custom headers
+\usepackage{lastpage} % Required to determine the last page for the footer
+\usepackage{extramarks} % Required for headers and footers
+\usepackage[usenames,dvipsnames]{color} % Required for custom colors
+\usepackage{graphicx} % Required to insert images
+\usepackage{listings} % Required for insertion of code
+\usepackage{courier} % Required for the courier font
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,activeacute]{babel}
+\usepackage[utf8]{inputenc} % Para poder incluir tildes y ñ automáticamente
+
+
+% Margins
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1} % Line spacing
+
+% Set up the header and footer
+\pagestyle{fancy}
+\lhead{28/02/2018} % Top left header
+\rhead{\textbf{Simon Says}} % Top right header
+\lfoot{\lastxmark} % Bottom left footer
+\rfoot{Página\ \thepage\ de\ \protect\pageref{LastPage}} % Bottom right footer
+\renewcommand\headrulewidth{0.4pt} % Size of the header rule
+\renewcommand\footrulewidth{0.4pt} % Size of the footer rule
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs
+
+%----------------------------------------------------------------------------------------
+%	CODE INCLUSION CONFIGURATION
+%----------------------------------------------------------------------------------------
+
+\lstset{language=C++, 
+        basicstyle=\ttfamily,
+                keywordstyle=\color{blue}\ttfamily,
+                stringstyle=\color{red}\ttfamily,
+                commentstyle=\color{green}\ttfamily,
+                morecomment=[l][\color{magenta}]{\#}
+}
+
+\begin{document}
+\begin{titlepage}
+\begin{center}
+\vspace*{-1in}
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[width=5cm]{./images/uclm_logo.eps} 
+\hspace*{1.5in}
+\includegraphics[width=5cm]{./images/esi_logo.eps}
+\end{center}
+\end{figure}
+\end{center}
+\begin{center}
+UCLM - Escuela Superior de Informática - Ciudad Real\\
+\vspace*{0.6in}
+\vspace*{0.2in}
+\begin{Large}
+\textbf{CEDV - 2018} \\
+\textbf{Minijuego 1. Simon Says.} \\
+\end{Large}
+\vspace*{0.3in}
+\vspace*{0.3in}
+\rule{80mm}{0.1mm}\\
+\vspace*{0.1in}
+\begin{large}
+Hecho por: \\
+Javier Córdoba Romero \\
+Juan José Corroto Martín \\
+Iván García Herrera \\
+\vspace*{0.3in}
+Fecha: 28 de Febrero de 2018.\\
+\end{large}
+\end{center}
+
+\end{titlepage}
+\tableofcontents
+% cuerpo del documento
+\newpage
+
+\section{}
+
+
+\end{document}
